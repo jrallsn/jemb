@@ -22,12 +22,12 @@ const functions = require('firebase-functions');
 // Instantiate the Dialogflow client.
 const app = dialogflow({debug: true});
 
-// Handle the Dialogflow intent named 'favorite color'.
-// The intent collects a parameter named 'color'.
-app.intent('favorite color', (conv, {color}) => {
-    const luckyNumber = color.length;
-    // Respond with the user's lucky number and end the conversation.
-    conv.close('Your lucky number is ' + luckyNumber);
+// Import utils
+
+// Handle the Dialogflow intent named 'Default Welcome Intent'.
+app.intent('Default Welcome Intent', (conv) => {
+    const ssml = '<speak><audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>Welcome to I X Feud!</speak>';
+    conv.ask(ssml);
 });
 
 // Set the DialogflowApp object to handle the HTTPS POST request.
