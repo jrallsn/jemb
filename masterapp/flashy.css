@@ -1,0 +1,146 @@
+body {
+  font-family: 'Ubuntu', sans-serif;
+  background-color: #E27A3F;
+  border-top: #DF5A49 50px solid;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+}
+
+div#countdown {
+  font-family: 'Pacifico', cursive;
+  color: #EFC94C;
+  font-size: 100px;
+}
+
+div#title {
+  font-family: 'Pacifico', cursive;
+  font-color: #ffffff;
+  font-size: 100px;
+  color: #ffffff;
+  text-transform: lowercase;
+  margin-bottom: 20px;
+}
+
+div {
+  align: 'center';
+}
+
+div#section-main {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 100px;
+  font-weight: bold;
+}
+
+div#section-secondary {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 60px;
+}
+
+div#section-under {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 60px;
+}
+
+div#roomiddiv {
+  font-size: 100px;
+}
+
+button {
+  border-radius: 15px;
+  color: #ffffff;
+  background-color: #334D5C;
+  border: none;
+  padding: 15px;
+  font-size: 30px;
+  margin: 10px;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+button:hover {
+  background-color: #455E69;
+}
+
+i.fa {
+  font-size: 50px;
+  margin: 10px;
+}
+
+i.fa-user {
+  color: #45B29D;
+  margin-left: 0px;
+  margin-right: 5px;
+}
+
+i.fa-check-circle {
+  color: #45B29D;
+}
+
+i.fa-times-circle {
+  color: #DF5A49;
+}
+
+input {
+  border-radius: 15px;
+  padding: 10px;
+  width: 50%;
+  height: 15%;
+  margin: 10px;
+  background-color: #EFC94C;
+  border: none;
+  font-size: 40px;
+  text-align: center;
+}
+
+::placeholder {
+  opacity: 0.3;
+  font-color: #E27A3F;
+  text-align: center;
+}
+
+div#waiting img {
+  position: absolute;
+  bottom: 0px;
+  align-self: center;
+  width: 100px;
+}
+
+span.player {
+  border: none;
+  margin: 5px;
+  background-color: #ffffff;
+  padding: 5px;
+  display: inline-block;
+  text-align: bottom;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Josefin Sans', sans-serif;
+  background-color: #EFC94C;
+  border-radius: 15px;
+}
+
+span.voted i {
+  color: #455E69;
+}
+
+div#feelsMenu {
+  text-align: center;
+}
+
+span#remainingTime {
+  border: none;
+  display: inline-block;
+  position: absolute;
+  background-color: #EFC94C;
+  left: 0px;
+  top: 0px;
+  height: 50px;
+  width: 0;
+}
+
+li { 
+  list-style-position: inside;
+}
+ul {
+  padding: 30px;
+}
