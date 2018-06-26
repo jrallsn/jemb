@@ -6,7 +6,6 @@ const wsPort = 3000;
 const restPort = 4000;
 
 const wss = new WebSocket.Server({ port: wsPort });
-var JembDbAdapter = require('./jeepdb.js');
 
 const submissionTimeLimit = 20000;
 const resultsDisplayTime = 10000; // time to display results in ms
@@ -75,7 +74,6 @@ wss.on('connection', function connection(ws) {
 
 	function initRoom(teamName){
   		var roomId =  generateId();
-        JeepDbAdapter.createTeamIfNotExists(teamName);
 
   		activeRooms[roomId] = {
             teamName: teamName,
@@ -144,54 +142,21 @@ wss.on('connection', function connection(ws) {
     function getPreviousSprintInfo(roomId) {
         var teamName = activeRooms[roomId].teamName;
 
-        JeepDbAdapter.getPreviousSprintInfo(teamName, function(sprintInfo){
-            var gameUpdate = {
-                info: 'previousSprintInfo',
-                roomId: roomId,
-                state: activeRooms[roomId].state,
-                teamName: teamName,
-                message: sprintInfo
-            };
-
-            activeRooms[roomId].masterSocket.send(JSON.stringify(gameUpdate));
-        });        
+   
     }
 
     function newSprint (roomId, sprintName) {
         activeRooms[roomId].state = GameStates.SHOW_OLD_ACTION_ITEMS_LIST;
         var teamName = activeRooms[roomId].teamName;
 
-	    JeepDbAdapter.createSprint(sprintName, teamName);
 
-        JeepDbAdapter.getIncompleteActionItems(teamName, function(oldActionItems){
-            var gameUpdate = {
-                info: 'oldActionItems',
-                roomId: roomId,
-                state: activeRooms[roomId].state,
-                teamName: teamName,
-                message: oldActionItems
-            };
-
-            updateAllClients(roomId, gameUpdate);
-        });  
     }
 
     function startActionItems (roomId) {
         activeRooms[roomId].state = GameStates.REVIEW_ACTION_ITEMS;
         var teamName = activeRooms[roomId].teamName;
 
-        var oldActionItems = JeepDbAdapter.getIncompleteActionItems(teamName, function(oldActionItems){
-            activeRooms[roomId].actionItemsToRate = oldActionItems;
-            activeRooms[roomId].voteReceived = {};
-            activeRooms[roomId].actionItemsCount = oldActionItems.length;
-            activeRooms[roomId].actionItemsCompleted = 0;
 
-            for(var i = 0; i < activeRooms[roomId].players.length; i++){
-                activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
-            }
-
-            startVoting(roomId);
-        });
     }
 
     function startVoting (roomId) {
@@ -255,9 +220,7 @@ wss.on('connection', function connection(ws) {
             activeRooms[roomId].actionItemsCompleted++;
         }
 
-        if(actionItemComplete){
-            JeepDbAdapter.actionItemComplete(activeRooms[roomId].currentActionItem.actionID);
-        }
+
 
         var masterUpdate = {
             info: 'votingEnded',
