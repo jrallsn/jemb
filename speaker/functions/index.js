@@ -25,7 +25,7 @@ const app = dialogflow({debug: true});
 // Import utils
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('status_default', (conv) => {
+app.intent('Default Welcome Intent', (conv) => {
     const ssml = `
         <speak>
             <audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>
