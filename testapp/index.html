@@ -21,7 +21,7 @@
 			var textToSend = messageBox.value;
 
 			exampleSocket.send(JSON.stringify({
-				action: 'testMsg',
+				action: 'submit',
 				message: textToSend
 			}));
 		}
@@ -29,12 +29,26 @@
 			console.log(event.data);
 			document.getElementById('response-div').innerHTML = event.data;
 		};
+
+		joinGame();
+
+		function question() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'http://api.seawall.horse:4000/question', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			req.send();
+		}
 	</script>
 	<br>
-	<button onclick="joinGame()">Join game</button>
 	<br>
 	<input type="text" id="messagebox">
-	<button onclick="sendMessage()">Send message</button>
+	<button onclick="sendMessage()">Send submission</button>
 	<br> 
 	<div id="response-div"></div>
 
