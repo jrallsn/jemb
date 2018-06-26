@@ -17,24 +17,24 @@ const GameStates = {
     COLLECTING_SUBMISSIONS: 'COLLECTING_SUBMISSIONS',
 };
 
-const Questions = {
-    ONE: 'What is your favourite colour?',
-    TWO: 'What is your favourite one-digit prime number?'
-};
+const questions = require('./questions.json');
+
+console.log(JSON.stringify(questions));
 
 var submissions = {};
 
 var gameStateObject = {
     state: GameStates.IDLE,
     remainingTime: 0,
-    prompt: ''
+    prompt: '',
+    currentQuestionNumber: 0
 };
 
 app.get('/hello', (req, res) => res.send('Hello World!'));
 
 app.get('/state', (req, res) => res.send(JSON.stringify(gameStateObject)));
 
-app.listen(restPort, () => console.log('Example app listening on port 4000!'));
+app.listen(restPort, () => console.log('JEMB and the Holograms listening on port 4000!'));
 
 function generateId() {
 	len = 4;
@@ -60,49 +60,80 @@ function updateOneClient (socket, updateText) {
     });
 }
 
-function updateAllSurveySubjects (updateObject) {
+function updateClientGroup (updateObject, clientArray) {
     var updateText = JSON.stringify(updateObject);
-    console.log('sending (survey subjects): %s', updateText);
-    for (var i = 0; i < activeSurveySubjects.length; i++) {
-        var socket = activeSurveySubjects[i].socket;
+    console.log('sending: %s', updateText);
+    for (var i = 0; i < clientArray.length; i++) {
+        var socket = clientArray[i].socket;
         if (socket.readyState !== 1) {
-            activeSurveySubjects.splice(i, 1);
+            clientArray.splice(i, 1);
             i--;
+            continue;
         }
         updateOneClient(socket, updateText);
     }
+}
+
+function updateAllSurveySubjects (updateObject) {
+    console.log('sending to survey subjects');
+    updateClientGroup(updateObject, activeSurveySubjects);
 }
 
 function updateAllPlayers (updateObject) {
-    var updateText = JSON.stringify(updateObject);
-    console.log('sending (players): %s', updateText);
-    for (var i = 0; i < activePlayers.length; i++){
-        var socket = activePlayers[i].socket;
-        if (socket.readyState !== 1) {
-            activePlayers.splice(i, 1);
-            i--;
-        }
-        updateOneClient(socket, updateText);
-    }
+    console.log('sending to players');
+    updateClientGroup(updateObject, activePlayers);
 }
 
 function updateMasterDisplays (updateObject) {
-    var updateText = JSON.stringify(updateObject);
-    console.log('sending (masters): %s', updateText);
-    for (var i = 0; i < activeMasterDisplays.length; i++){
-        var socket = activeMasterDisplays[i].socket;
-        if (socket.readyState !== 1) {
-            activeMasterDisplays.splice(i, 1);
-            i--;
-        }
-        updateOneClient(socket, updateText);
-    }
+    console.log('sending to master displays');
+    updateClientGroup(updateObject, activeMasterDisplays);
 }
 
 function updateAllClients (updateObject) {
     updateAllPlayers(updateObject);
     updateMasterDisplays(updateObject);
     updateAllSurveySubjects(updateObject);
+}
+
+function submit (responseText) {
+    if (gameStateObject.currentQuestionNumber === 0) {
+        return;
+    }
+    if (gameStateObject.state !== GameStates.COLLECTING_SUBMISSIONS) {
+        return;
+    }
+    if (typeof responseText !== 'string') {
+        return;
+    }
+
+    let qNum = gameStateObject.currentQuestionNumber;
+
+    answer = responseText.toLowerCase();
+    answer = answer.replace(/\s/g, '');
+    
+    submissions[currentQuestionNumber] = submissions[currentQuestionNumber] || {};
+    submissions[currentQuestionNumber][answer] = submissions[currentQuestionNumber][answer] || 0;
+    submissions[currentQuestionNumber][answer]++;
+}
+
+function getTotalSubmissionsForQuestion (questionNum) {
+    if (!submissions.hasOwnProperty(questionNum)) {
+        return 0;
+    }
+
+    var total = 0;
+
+    var subs = submissions[questionNum];
+
+    for (var ans in subs) {
+        if (!subs.hasOwnProperty(ans)) {
+            continue;
+        }
+
+        total += subs[ans];
+    }
+
+    return total;
 }
 
 wss.on('connection', function connection(ws) {
