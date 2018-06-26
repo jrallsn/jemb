@@ -25,9 +25,23 @@ const app = dialogflow({debug: true});
 // Import utils
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('Default Welcome Intent', (conv) => {
-    const ssml = '<speak><audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>Welcome to I X Feud!</speak>';
+app.intent('status_default', (conv) => {
+    const ssml = `
+        <speak>
+            <audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>
+            Welcome to I X Feud!
+        </speak>`;
     conv.ask(ssml);
+
+    conv.ask("You ready dawg?");
+});
+
+app.intent('status_yes', (conv) => {
+    conv.ask("starting game");
+});
+
+app.intent('status_no', (conv) => {
+    conv.close("fine, we can play without you");
 });
 
 // Set the DialogflowApp object to handle the HTTPS POST request.
