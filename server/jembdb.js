@@ -1,5 +1,5 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('../db/jeep.db');
+var db = new sqlite3.Database('../db/jemb.db');
 
 module.exports = {
 	createTeamIfNotExists: function (teamName) {

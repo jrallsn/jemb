@@ -1,30 +1,31 @@
 const WebSocket = require('ws');
+const express = require('express')
+const app = express()
 
-const wss = new WebSocket.Server({ port: 3000 });
-var JeepDbAdapter = require('./jeepdb.js');
+const wsPort = 3000;
+const restPort = 4000;
 
-const votingTimeLimit = 10000;  // default time limit in ms
-const submissionTimeLimit = 40000;
+const wss = new WebSocket.Server({ port: wsPort });
+var JembDbAdapter = require('./jeepdb.js');
+
+const submissionTimeLimit = 20000;
 const resultsDisplayTime = 10000; // time to display results in ms
-const actionItemCompleteProportion = 0.75;
 
 const GameStates = {
-    WAITING_FOR_PLAYERS: 'WAITING_FOR_PLAYERS',
-    SELECT_GAME: 'SELECT_GAME',
-    FEELS_MENU: 'FEELS_MENU',
-    SHOW_OLD_ACTION_ITEMS_LIST: 'SHOW_OLD_ACTION_ITEMS_LIST',
-    REVIEW_ACTION_ITEMS: 'REVIEW_ACTION_ITEMS',
-    SHOW_ACTION_ITEMS_RESULTS: 'SHOW_ACTION_ITEMS_RESULTS',
-    SUBMIT_SADS: 'SUBMIT_SADS',
-    DISCUSS_SADS: 'DISCUSS_SADS',
-    VOTE_SADS: 'VOTE_SADS',
-    VIEW_ALL_SADS: 'VIEW_ALL_SADS',
-    CREATE_ACTION_ITEMS: 'CREATE_ACTION_ITEMS',
-    SUBMIT_HAPPIES: 'SUBMIT_HAPPIES',
-    DISCUSS_HAPPIES: 'DISCUSS_HAPPIES',
-    VOTE_HAPPIES: 'VOTE_HAPPIES',
-    VIEW_ALL_HAPPIES: 'VIEW_ALL_HAPPIES'
+    IDLE: 'IDLE',
+    COLLECTING_SUBMISSIONS: 'COLLECTING_SUBMISSIONS',
 };
+
+const Questions = {
+    ONE: 'What is your favourite colour?',
+    TWO: 'What is your favourite one-digit prime number?'
+};
+
+var submissions = {};
+
+app.get('/', (req, res) => res.send('Hello World!'));
+
+app.listen(restPort, () => console.log('Example app listening on port 4000!'));
 
 function generateId() {
 	len = 4;
@@ -489,198 +490,7 @@ wss.on('connection', function connection(ws) {
         updateAllClients(roomId, gameUpdate);
     }
 
-    function endSadsVoting (roomId) {
-        clearTimeout(activeRooms[roomId].timer);
 
-        var playerUpdate = {
-            info: 'sadsVotingEnded',
-            state: activeRooms[roomId].state,
-            roomId: roomId
-        };
-
-        updateAllPlayers(roomId, playerUpdate);
-
-        var totalVote = 0;
-
-        for(var uname in activeRooms[roomId].votes){
-            if(!activeRooms[roomId].votes.hasOwnProperty(uname)){
-                continue;
-            }
-
-            totalVote += activeRooms[roomId].votes[uname];
-        }
-
-        activeRooms[roomId].feedbackItemsWithScores.push({
-            feedbackText: activeRooms[roomId].currentFeedbackItem,
-            score: ((totalVote / activeRooms[roomId].players.length) * 100).toFixed(0)
-        });
-
-        var votingResultText = totalVote + ' / ' + activeRooms[roomId].players.length;
-
-        var masterUpdate = {
-            info: 'sadsVotingEnded',
-            roomId: roomId,
-            state: activeRooms[roomId].state,
-            whoVoted: activeRooms[roomId].voteReceived,
-            itemInfo: activeRooms[roomId].currentFeedbackItem,
-            voteResult: votingResultText,
-            displayTime: resultsDisplayTime
-        };
-
-        updateMasterClient(roomId, masterUpdate);
-
-        setTimeout(function(){startSadsVoting(roomId);}, resultsDisplayTime);
-    }
-
-    function endSadsPhase (roomId) {
-        delete activeRooms[roomId].voteReceived;
-        delete activeRooms[roomId].votes;
-
-        activeRooms[roomId].state = GameStates.VIEW_ALL_SADS;
-
-        var masterUpdate = {
-            info: 'sadsResults',
-            roomId: roomId,
-            state: activeRooms[roomId].state,
-            feedback: activeRooms[roomId].feedbackItemsWithScores
-        };
-
-        updateMasterClient(roomId, masterUpdate);
-    }
-
-    function initHappiesVoting(roomId) {
-        activeRooms[roomId].state = GameStates.VOTE_HAPPIES;
-
-        var feedbackItems = activeRooms[roomId].feedbackItems;
-        activeRooms[roomId].feedbackItemsToRate = feedbackItems;
-        activeRooms[roomId].voteReceived = {};
-        activeRooms[roomId].feedbackItemsCount = feedbackItems.length;
-        activeRooms[roomId].feedbackItemsWithScores = [];
-
-        for(var i = 0; i < activeRooms[roomId].players.length; i++){
-            activeRooms[roomId].voteReceived[activeRooms[roomId].players[i].playerName] = false;
-        }
-
-        startHappiesVoting(roomId);
-    }
-
-    function startHappiesVoting(roomId) {
-        if (activeRooms[roomId].feedbackItemsToRate.length === 0) {
-            endHappiesPhase(roomId);
-            return;
-        }
-
-        for(var userName in activeRooms[roomId].voteReceived) {
-            if(!activeRooms[roomId].voteReceived.hasOwnProperty(userName)){
-                continue;
-            }
-
-            activeRooms[roomId].voteReceived[userName] = false;
-        }
-        activeRooms[roomId].votes = {};
-
-        activeRooms[roomId].currentFeedbackItem = activeRooms[roomId].feedbackItemsToRate.pop();
-
-        var gameUpdate = {
-            info: 'startHappiesVoting',
-            roomId: roomId,
-            state: activeRooms[roomId].state,
-            itemInfo: activeRooms[roomId].currentFeedbackItem,
-            timeLimit: votingTimeLimit,
-            whoVoted: activeRooms[roomId].voteReceived
-        };
-
-        activeRooms[roomId].timer = setTimeout(function(){
-            endHappiesVoting(roomId);
-        }, votingTimeLimit);
-
-        updateAllClients(roomId, gameUpdate);
-    }
-
-    function endHappiesVoting (roomId) {
-        clearTimeout(activeRooms[roomId].timer);
-
-        var playerUpdate = {
-            info: 'happiesVotingEnded',
-            state: activeRooms[roomId].state,
-            roomId: roomId
-        };
-
-        updateAllPlayers(roomId, playerUpdate);
-
-        var totalVote = 0;
-
-        for(var uname in activeRooms[roomId].votes){
-            if(!activeRooms[roomId].votes.hasOwnProperty(uname)){
-                continue;
-            }
-
-            totalVote += activeRooms[roomId].votes[uname];
-        }
-
-        activeRooms[roomId].feedbackItemsWithScores.push({
-            feedbackText: activeRooms[roomId].currentFeedbackItem,
-            score: ((totalVote / activeRooms[roomId].players.length) * 100).toFixed(0)
-        });
-
-        var votingResultText = totalVote + ' / ' + activeRooms[roomId].players.length;
-
-        var masterUpdate = {
-            info: 'happiesVotingEnded',
-            roomId: roomId,
-            state: activeRooms[roomId].state,
-            whoVoted: activeRooms[roomId].voteReceived,
-            itemInfo: activeRooms[roomId].currentFeedbackItem,
-            voteResult: votingResultText,
-            displayTime: resultsDisplayTime
-        };
-
-        updateMasterClient(roomId, masterUpdate);
-
-        setTimeout(function(){startHappiesVoting(roomId);}, resultsDisplayTime);
-    }
-
-    function endHappiesPhase (roomId) {
-        delete activeRooms[roomId].voteReceived;
-        delete activeRooms[roomId].votes;
-
-        activeRooms[roomId].state = GameStates.VIEW_ALL_HAPPIES;
-
-        var masterUpdate = {
-            info: 'happiesResults',
-            roomId: roomId,
-            state: activeRooms[roomId].state,
-            feedback: activeRooms[roomId].feedbackItemsWithScores
-        };
-
-        updateMasterClient(roomId, masterUpdate);
-    }
-
-    function startActionItemCreation (roomId){
-        activeRooms[roomId].state = GameStates.CREATE_ACTION_ITEMS;
-
-        var gameUpdate = {
-            info: 'createActionItems',
-            roomId: roomId,
-            state: activeRooms[roomId].state
-        };
-
-        updateAllClients(roomId, gameUpdate);
-    }
-
-    function createActionItem (roomId, text){
-        var teamName = activeRooms[roomId].teamName;
-
-        JeepDbAdapter.addActionItem(text, teamName);
-
-        var gameUpdate = {
-            info: 'actionItemCreated',
-            roomId: roomId,
-            state: activeRooms[roomId].state
-        };
-
-        updateAllClients(roomId, gameUpdate);
-    }
 
   	function testMsg(roomId, content){
         updateAllClients(roomId, {message: content});
