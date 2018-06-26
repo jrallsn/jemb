@@ -38,6 +38,18 @@ app.intent('status_default', (conv) => {
 
 app.intent('status_yes', (conv) => {
     conv.ask("starting game");
+    // Game show music
+    // Ask Player 1 name
+    // Ask Player 2 name
+    // Question One Intro
+    // Generate Random question from list
+    // Play waiting sound while polling
+    // Ask Player 1
+    // Record Response
+    // Ask Player 2
+    // Record Response
+    // Show/Say points
+
 });
 
 app.intent('status_no', (conv) => {
