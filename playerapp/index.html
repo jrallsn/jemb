@@ -6,6 +6,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
 
   <style>
+    body {
+      background: black;
+    }
+    #x {
+      width: 100%;
+      height: 100%;
+      padding: 50px;
+      border: 50px solid gray;
+      margin: 0; 
+    }
+    #question {
+      font-size: 96px;
+      color: white;
+    }
+    #answerForm {
+      font-size: 48px;
+    }
   </style>
 
 </head>
@@ -42,7 +59,7 @@
       var data = JSON.parse(event.data);
       if (data.prompt) {
         var html = '';
-        html = '<h1>' + data.prompt + '</h1>';
+        html = '<p>' + data.prompt + '</p>';
         document.getElementById('question').innerHTML = html;
       }
     };
@@ -65,17 +82,27 @@
     });
 
   </script>
-
-  <div id="question"></div>
-
-  <form class="ui form">
-    <div class="field">
-      <input placeholder="One word, maximum 16 characters" name="answer" type="text">
+  <div class="container" id="x">
+    <div class="ui grid page">
+      <div class="sixteen wide column">
+        <div id="question"></div>
+      </div>
+      <div class="sixteen wide column">
+        <div id="answerForm">
+          <form class="ui form">
+            <div class="field">
+              <input placeholder="Your answer..." name="answer" id="answer" type="text">
+            </div>
+            <div class="massive ui left floated orange reset button"
+                 id="clearBtn"
+                 onClick="document.getElementById('answer').value = ''">Clear</div>
+            <div class="massive ui right floated teal submit button">Submit</div>
+            <div class="ui error message"></div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="ui primary submit button">Submit</div>
-    <div class="ui error message"></div>
-  </form>
-        
+  </div>
+</div>
 </body>
 </html>
