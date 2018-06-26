@@ -134,8 +134,8 @@ wss.on('connection', function connection(ws) {
         joinGameGeneric(activePlayers, ws);
     }
 
-  	function testMsg(roomId, content){
-        updateAllClients(roomId, {message: content});
+  	function testMsg(content){
+        updateAllClients({message: content});
  	}
 
 	ws.on('message', function incoming(message) {
@@ -149,58 +149,20 @@ wss.on('connection', function connection(ws) {
         }
     	var action = data.action;
 
-        data.roomId = data.roomId || '';
-        if(action !== 'init' && !activeRooms[data.roomId]){
-            console.error('Attempted action ' + data.action + ' but Room ID ' + data.roomId + ' not initialized');
-            return;
-        }
-
         switch (action) {
-            case 'init':
-                initRoom(data.message);
+            case 'joinMasterDisplay':
+                joinGameMasterDisplay();
                 break;
-            case 'join':
-                joinRoom(data.roomId, data.userName);
+            case 'joinPlayer':
+                joinGamePlayer();
+                break;
+            case 'joinSurveySubject':
+                joinGameSurveySubject();
                 break;
             case 'testMsg':
-                testMsg(data.roomId, data.message);
+                testMsg(data.message);
                 break;
-            case 'allPlayersJoined':
-                allPlayersJoined(data.roomId);
-                break;
-            case 'selectGame':
-                selectGame(data.roomId, data.gameName);
-                break;
-            case 'previousSprints':
-                getPreviousSprintInfo(data.roomId);
-                break;
-            case 'newSprint':
-                newSprint(data.roomId, data.sprintName);
-                break;
-            case 'startActionItems':
-                startActionItems(data.roomId);
-                break;
-            case 'submitVote':
-                recordVote(data.roomId, data.userName, data.vote);
-                break;
-            case 'submitFeedback':
-                submitFeedback(data.roomId, data.userName, data.feedback);
-                break;
-            case 'startActionItemCreation':
-                startActionItemCreation(data.roomId);
-                break;
-            case 'createActionItem':
-                createActionItem(data.roomId, data.message);
-                break;
-            case 'startSadsVoting':
-                initSadsVoting(data.roomId);
-                break;
-            case 'startHappiesVoting':
-                initHappiesVoting(data.roomId);
-                break;
-            case 'startHappiesPhase':
-                startHappies(data.roomId);
-                break;
+            
         }
 
   	});
