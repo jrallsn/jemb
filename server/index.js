@@ -64,7 +64,12 @@ function updateAllSurveySubjects (updateObject) {
     var updateText = JSON.stringify(updateObject);
     console.log('sending (survey subjects): %s', updateText);
     for (var i = 0; i < activeSurveySubjects.length; i++) {
-        updateOneClient(activeSurveySubjects[i].socket, updateText);
+        var socket = activeSurveySubjects[i].socket;
+        if (socket.readyState !== 1) {
+            activeSurveySubjects.splice(i, 1);
+            i--;
+        }
+        updateOneClient(socket, updateText);
     }
 }
 
@@ -72,8 +77,12 @@ function updateAllPlayers (updateObject) {
     var updateText = JSON.stringify(updateObject);
     console.log('sending (players): %s', updateText);
     for (var i = 0; i < activePlayers.length; i++){
-        updateOneClient(activePlayers[i].socket, updateText);
-
+        var socket = activePlayers[i].socket;
+        if (socket.readyState !== 1) {
+            activePlayers.splice(i, 1);
+            i--;
+        }
+        updateOneClient(socket, updateText);
     }
 }
 
@@ -81,8 +90,12 @@ function updateMasterDisplays (updateObject) {
     var updateText = JSON.stringify(updateObject);
     console.log('sending (masters): %s', updateText);
     for (var i = 0; i < activeMasterDisplays.length; i++){
-        updateOneClient(activeMasterDisplays[i].socket, updateText);
-
+        var socket = activeMasterDisplays[i].socket;
+        if (socket.readyState !== 1) {
+            activeMasterDisplays.splice(i, 1);
+            i--;
+        }
+        updateOneClient(socket, updateText);
     }
 }
 
