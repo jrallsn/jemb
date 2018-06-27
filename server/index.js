@@ -189,7 +189,7 @@ function getSortedSubmissions(questionNum) {
     }
 
     allSubmissions.sort(function(a, b) {
-        return a.count - b.count;
+        return b.count - a.count;
     });
 
     return allSubmissions;
