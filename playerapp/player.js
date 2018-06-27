@@ -32,7 +32,7 @@ ws.onmessage = function(event){
     html = '<p>' + data.prompt + '</p>';
     document.getElementById('question').innerHTML = html;
     console.log('html: ' + html);
-    startTimer(data.remainingTime/1000);
+    startTimer(Math.floor(data.remainingTime/1000));
     $("#survey").show();
     $("#state").hide();
   } else {
