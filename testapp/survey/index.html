@@ -32,7 +32,7 @@
 		exampleSocket.onmessage = function(event){
 			console.log(event.data);
 
-			var state = event.data;
+			var state = JSON.parse(event.data);
 
 			if (state.state === 'COLLECTING_SUBMISSIONS') {
 				document.getElementById('prompt-div').innerHTML = state.prompt;
