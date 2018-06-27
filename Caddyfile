@@ -1,7 +1,7 @@
 ix.seawall.horse/t {
 	root ./testapp
 }
-ix.seawall.horse/survey/ {
+ix.seawall.horse/survey {
 	root ./playerapp
 	mime .css text/css
 	mime .js text/javascript

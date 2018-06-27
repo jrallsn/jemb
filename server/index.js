@@ -32,7 +32,37 @@ var lastButOneQuestion = -1;
 console.log(JSON.stringify(questions));
 console.log(questions.length);
 
-var submissions = {};
+var submissions = {
+    0: {
+        red: 5,
+        blue: 2
+    },
+    1: {
+        '3': 3,
+        '7': 7
+    },
+    2: {
+        socks: 7,
+        shoes: 3,
+        nothing: 17,
+        sandals: 12,
+        pants: 1
+    },
+    3: {
+        grail: 5,
+        revenge: 17
+    },
+    4: {
+        picard: 7,
+        kirk: 7,
+        janeway: 1,
+        sisko: 6
+    },
+    5: {
+        emacs: 5,
+        vim: 5
+    }
+};
 
 const defaultGameState = {
     state: GameStates.IDLE,
