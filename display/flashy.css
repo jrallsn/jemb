@@ -42,6 +42,11 @@ div#section-under {
   font-size: 60px;
 }
 
+div#section-board {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 60px;
+}
+
 div#roomiddiv {
   font-size: 100px;
 }
@@ -105,7 +110,7 @@ div#waiting img {
   width: 100px;
 }
 
-span.player {
+span.answer {
   border: none;
   margin: 5px;
   background-color: #ffffff;

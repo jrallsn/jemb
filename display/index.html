@@ -5,12 +5,12 @@
   <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Pacifico" rel="stylesheet">
 </head>
 <body>
-	Welcome to: a game
+	<div id="title">Welcome to: a game</div>
 
 	<script type="text/javascript">
 		
 		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
-		var activeRoomId;
+		var timerIntervalId;
 		
 		function joinGame() {
 			exampleSocket.send(JSON.stringify({
@@ -32,12 +32,28 @@
 			switch (gameState) {
 	            case 'IDLE':
 	                displayString = 'Waiting to begin...';
+	                document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'COLLECTING_SUBMISSIONS':
 	                displayString = state.prompt;
+	                document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'SHOWING_RESULT':
 	                displayString = JSON.stringify(state.submissions);
+
+	                var submissionsString = '';
+	                for (var i = 0; i < state.submissions.length; i++) {
+	                	var answer = state.submissions[i];
+
+	                	var answerText = answer.answer;
+	                	var answerCount = answer.count;
+
+	                	submissionsString += '<span class="answer" id="answer-' + i + '">' + answerText + ' - ' + answerCount + '</div>';
+
+	                	document.getElementById('section-board').style.display = "";
+	                	document.getElementById('section-board').innerHTML = submissionsString;
+	                }
+
 	                break;
 	            case 'GETTING_ANSWERS':
 	            	if (state.submittedAnswer) {
@@ -51,15 +67,73 @@
 	            	} else {
 	            		displayString = 'Waiting for player...';
 	            	}
+	            	document.getElementById('section-board').style.display = "none";
 	                break;
 	        }
 
+	        if(state.remainingTime > 0) {
+				var timeSeconds = Number(message.displayTime) / 1000;
+				startTimer(timeSeconds);
+			} else {
+				hideTimer();
+			}
+
 	        document.getElementById('display-div').innerHTML = displayString;
 		};
+
+		function startTimer(numSeconds) {
+			totalTime = numSeconds;
+			if(timerIntervalId){
+				clearInterval(timerIntervalId);
+			}
+			var timerDiv = document.getElementById('countdown');
+			var seconds = Number(numSeconds);
+			timerDiv.innerHTML = seconds;
+			timerDiv.style.display = "";
+
+			timerIntervalId = setInterval(function(){
+				seconds--;
+				remainingTime = seconds;
+
+				document.getElementById('timer').style.display = "";
+				document.getElementById('remainingTime').style.width = remainingTime / totalTime * 100 + "%";
+
+				timerDiv.innerHTML = seconds;
+				if(seconds === 0){
+					clearInterval(timerIntervalId);
+				}
+			}, 1000);
+		}
+
+		function hideTimer() {
+			var timerDiv = document.getElementById('countdown');
+			clearInterval(timerIntervalId);
+			timerDiv.style.display = "none";
+			document.getElementById('timer').style.display = "none";
+		}
 	</script>
+
+	<div id='timer' style="display: none;">
+		<span id='remainingTime'>
+		</span>
+		<div id='waiting'>
+			<img src="dancing.gif">
+		</div>
+	</div>
+
 	<br><br>
-	<div id="display-div"></div>
+	<div id='section-main'>
+		
+	</div>
 
+	<div id='section-secondary'>
+		<div id="display-div">gimme dat boat</div>
+	</div>
 
+	<div id='section-board' style="display: none;">
+		<span class="answer" id="answer-1">whatevers - a</div> 
+	</div>	
+
+	<div id='countdown' style="display:none"></div>
 </body>
 </html>
