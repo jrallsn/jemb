@@ -89,7 +89,8 @@ app.post('/answer', (req, res) => {
         submittedAnswer: '',
         numMatching: 0,
         totalResponses: 0,
-        percent: -1
+        percent: -1,
+        rank: -1
     };
 
     var ans = req.body.answer;
@@ -99,6 +100,9 @@ app.post('/answer', (req, res) => {
     result.totalResponses = getTotalSubmissionsForQuestion(gameStateObject.currentQuestionNumber);
     if (result.totalResponses > 0) {
         result.percent = 100.0 * result.numMatching / result.totalResponses;
+    }
+    if (result.numMatching > 0) {
+        result.rank = getRank(getSortedSubmissions(gameStateObject.currentQuestionNumber), ans);
     }
 
     // include game state in result
@@ -119,7 +123,26 @@ app.post('/showresults', (req, res) => {
     gameStateObject.state = GameStates.SHOWING_RESULT;
 
     result = deepClone(gameStateObject);
-    result.submissions = submissions[gameStateObject.currentQuestionNumber];
+
+ /*   var allSubmissions = [];
+    for (var answer in submissions[gameStateObject.currentQuestionNumber]) {
+        if (!submissions[gameStateObject.currentQuestionNumber].hasOwnProperty(answer)) {
+            continue;
+        }
+
+        var count = submissions[gameStateObject.currentQuestionNumber][answer];
+
+        allSubmissions.push({
+            answer: answer,
+            count: count
+        });
+    }
+
+    allSubmissions.sort(function(a, b) {
+        return a.count - b.count;
+    });
+*/
+    result.submissions = getSortedSubmissions(gameStateObject.currentQuestionNumber);//allSubmissions;
 
     updateMasterDisplays(result);
 });
@@ -148,6 +171,41 @@ function generateId() {
     }
 
     return uid;
+}
+
+function getSortedSubmissions(questionNum) {
+    var allSubmissions = [];
+    for (var answer in submissions[questionNum]) {
+        if (!submissions[questionNum].hasOwnProperty(answer)) {
+            continue;
+        }
+
+        var count = submissions[questionNum][answer];
+
+        allSubmissions.push({
+            answer: answer,
+            count: count
+        });
+    }
+
+    allSubmissions.sort(function(a, b) {
+        return a.count - b.count;
+    });
+
+    return allSubmissions;
+}
+
+function getRank(sortedSubmissions, answer) {
+    var rank = -1;
+
+    for (var i = 0; i < sortedSubmissions.length; i++) {
+        if (sortedSubmissions[i].answer === answer) {
+            rank = i + 1;
+            break;
+        }
+    }
+
+    return rank;
 }
 
 function updateTimeRemaining() {
