@@ -13,6 +13,8 @@
 
 'use strict';
 
+let fetch = require('node-fetch');
+
 // Import the Dialogflow module from the Actions on Google client library.
 const {dialogflow} = require('actions-on-google');
 
@@ -22,34 +24,26 @@ const functions = require('firebase-functions');
 // Instantiate the Dialogflow client.
 const app = dialogflow({debug: true});
 
-//Send an async ajax request to a server with a callback function
-function send(method, url, data, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-      if (xhr.status !== 200) return callback("[" + xhr.status + "]" + xhr.responseText, null);
-      return callback(null, JSON.parse(xhr.responseText, dateParser));
-  };
-  xhr.open(method, url, true);
-  if (!data) xhr.send();
-  else {
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify(data));
-  }
-}
+const asyncTask = () => new Promise(
+  resolve => setTimeout(resolve, 1000)
+);
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('Default Welcome Intent', (conv) => {
-    const ssml = `
-        <speak>
-  <par>
-    <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
-            <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
-            Welcome to I X Feud!
-    </media>
-  </par>
-</speak>`;
-    conv.ask(ssml);
-    conv.ask("You ready dawg?");
+app.intent('Default Welcome Intent', conv => {
+//     const ssml = `
+//         <speak>
+//   <par>
+//     <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
+//             <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
+//             Welcome to I X Feud!
+//     </media>
+//   </par>
+// </speak>`;
+    //conv.ask(ssml);
+    //conv.ask("You ready dawg?");
+    return getQuestion().then((question) => {
+        conv.ask("me");
+    });
 });
 
 // If user answers yes then ask for Player 1 name
@@ -78,6 +72,44 @@ app.intent('player1_name', (conv, {name}) => {
     conv.ask(confirmName);
     conv.ask("Player 2, what's your name?");
 });
+
+function getQuestion() {
+    // return new Promise(resolve => {
+    //      fetch('https://api.seawall.horse/question',
+    //       {
+    //           method: 'GET',
+    //           data: ''
+    //       })
+    //       .then(function(response){ return response.json(); })
+    //       .then(function(data){
+    //         if(data){
+    //             if(data.prompt){
+    //                  resolve(data.prompt);
+    //             }
+    //             else{
+    //                 resolve("No prompt");
+    //             }
+    //         }
+    //         else{
+    //             resolve("No data");
+    //         }
+    //       });
+    //   });
+    //return new Promise(resolve => {resolve("Hello")});
+  /*  return new Promise(resolve => {
+        console.log("Hi");
+        var req = new XMLHttpRequest();
+        req.open('GET', 'http://api.seawall.horse/question', true);
+        req.onreadystatechange = function() {
+            if (req.readyState === 4 && req.status === 200) {
+                resolve(req.responseText);
+            }
+        };
+        req.send();
+    });*/
+    return fetch('https://api.seawall.horse/question')
+    .then(() => {return 'oh my god please work';});
+}
 
 // Save player 2 name
 app.intent('player2_name', (conv, {name}) => {
@@ -108,11 +140,11 @@ app.intent('player2_name', (conv, {name}) => {
     //conv.ask(ssml);
     conv.ask("Audience, get ready for question 1!");
 
-    send('GET', 'https://api.seawall.horse/question', undefined, function (err, data) {
-      if (err) return console.log(err);
+    // send('GET', 'https://api.seawall.horse/question', undefined, function (err, data) {
+    //   if (err) return console.log(err);
 
-      conv.ask(data);
-    })
+    //   conv.ask(data);
+    // })
 });
 
 
