@@ -148,6 +148,14 @@ app.intent('player2_name', (conv, {name}) => {
 });
 
 
+// Handle the Dialogflow intent named 'favorite color'.
+// The intent collects a parameter named 'color'.
+app.intent('favorite color', (conv, {color}) => {
+    const luckyNumber = color.length;
+    // Respond with the user's lucky number and end the conversation.
+    conv.close('Your lucky number is ' + luckyNumber);
+});
+
 
 // Set the DialogflowApp object to handle the HTTPS POST request.
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
