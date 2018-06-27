@@ -2,33 +2,37 @@ var totalTime = 0,
     remainingTime = 0,
     timerIntervalId;
 
-var ws = new WebSocket("wss://echo.websocket.org");
+var ws = new WebSocket("wss://ws.seawall.horse/");
   
-ws.onopen = function(evt) { onOpen(evt) };
-ws.onclose = function(evt) { onClose(evt) };
-ws.onmessage = function(evt) { onMessage(evt) };
-ws.onerror = function(evt) { onError(evt) };
+ws.onclose = function(event) {
+  console.log('ws: closed socket');
+};
+//ws.onmessage = function(evt) { onMessage(evt) };
+ws.onerror = function(event) {
+  console.log('ws: error');
+  $("#poll").hide();
+
+};
 
 ws.onopen = function(event) {
-  console.log('opened socket');
-  onOpen(event);
+  console.log('ws: opened socket');
 };
 
 $("#thanks").hide();
 $("#poll").show();
 
-function onOpen(evt) {
-  /* var message = {
-    action: 'joinSurveySubject'
-  }
-  */
-  var message = {
-    state: 'ask',
-    remainingTime: 5,
-    prompt: 'What do you put on your feet?'
-  };
-  ws.send(JSON.stringify(message));
-}
+// function onOpen(evt) {
+//   /* var message = {
+//     action: 'joinSurveySubject'
+//   }
+//   */
+//   var message = {
+//     state: 'ask',
+//     remainingTime: 5,
+//     prompt: 'What do you put on your feet?'
+//   };
+//   ws.send(JSON.stringify(message));
+// }
 
 ws.onmessage = function(event){
   console.log(JSON.stringify(event.data));
@@ -38,8 +42,15 @@ ws.onmessage = function(event){
     html = '<p>' + data.prompt + '</p>';
     document.getElementById('question').innerHTML = html;
   }
+  console.log('html: ' + html);
   startTimer(10);
 };
+
+function joinGame() {
+  ws.send(JSON.stringify({
+    action: 'joinSurveySubject'
+  }));
+}
 
 function startTimer(numSeconds) {
   totalTime = numSeconds;
