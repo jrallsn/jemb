@@ -38,7 +38,11 @@
 	                displayString = JSON.stringify(state.submissions);
 	                break;
 	            case 'GETTING_ANSWERS':
-	                displayString = JSON.stringify(state.submittedAnswer);
+	            	if (state.submittedAnswer) {
+	            		displayString = JSON.stringify(state.submittedAnswer);
+	            	} else {
+	            		displayString = 'Waiting for player...'
+	            	}
 	                break;
 	        }
 

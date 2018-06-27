@@ -23,7 +23,7 @@
 			console.log(event.data);
 
 			var state = JSON.parse(event.data);
-			
+
 			document.getElementById('response-div').innerHTML = event.data;
 		};
 
@@ -71,10 +71,24 @@
 
 			req.send(JSON.stringify({}));
 		}
+
+		function showResults() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'https://api.seawall.horse/showresults', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			req.send(JSON.stringify({}));
+		}
 	</script>
 	<br>
 	<button onclick="sendReset()">Reset</button><br>
 	<button onclick="question()">Ask for a question</button><br>
+	<button onclick="showResults()">Show results</button><br>
 	<br>
 	
 	<br>
