@@ -4,7 +4,10 @@ ix.seawall.horse/t {
 ix.seawall.horse/display {
 	root ./display
 }
-api.seawall.horse {
+ix.seawall.horse/static {
+	root ./static
+}
+api.seawall.horse api.allsn.ca {
 	cors
 
 	proxy / localhost:4000 {
