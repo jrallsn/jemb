@@ -20,6 +20,7 @@ ws.onopen = function(event) {
 
 $("#thanks").hide();
 $("#survey").hide();
+$("#state").hide();
 
 ws.onmessage = function(event){
   console.log(JSON.stringify(event.data));
@@ -28,20 +29,21 @@ ws.onmessage = function(event){
     var html = '';
     html = '<p>' + data.prompt + '</p>';
     document.getElementById('question').innerHTML = html;
+    console.log('html: ' + html);
+    startTimer(data.remainingTime);
     $("#survey").show();
     $("#state").hide();
   } else {
     waiting();
   }
 
-  console.log('html: ' + html);
-  startTimer(10);
 };
 
 function waiting() {
-  document.getElementById('state').innerHTML = 'Waiting for a survey question...';
+  document.getElementById('stateText').innerHTML = 'Waiting for a survey question...';
   $("#survey").hide();
   $("#state").show();
+  $("#spinner").addClass('active');
 }
 
 function joinGame() {
@@ -94,9 +96,3 @@ function sendMessage() {
   }));
   waiting();
 }
-
-// function another() {
-//   $("#survey").show();
-//   $("#thanks").hide();
-//   console.log('another!');
-// }
