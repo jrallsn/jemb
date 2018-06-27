@@ -1,0 +1,101 @@
+<html>
+<head>
+</head>
+<body>
+	MASTER TEST APP INDEX
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
+		var activeRoomId;
+		
+		function joinGame() {
+			exampleSocket.send(JSON.stringify({
+				action: 'joinMasterDisplay'
+			}));
+		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+		
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+
+			var state = JSON.parse(event.data);
+
+			document.getElementById('response-div').innerHTML = event.data;
+		};
+
+		
+
+		function question() {
+			var req = new XMLHttpRequest();
+			req.open('GET', 'https://api.seawall.horse/question', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			req.send();
+		}
+
+		function sendAnswer() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'https://api.seawall.horse/answer', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			var ans = answerbox.value;
+
+			req.send(JSON.stringify({
+				answer: ans
+			}));
+		}
+
+		function sendReset() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'https://api.seawall.horse/reset', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			req.send(JSON.stringify({}));
+		}
+
+		function showResults() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'https://api.seawall.horse/showresults', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			req.send(JSON.stringify({}));
+		}
+	</script>
+	<br>
+	<button onclick="sendReset()">Reset</button><br>
+	<button onclick="question()">Ask for a question</button><br>
+	<button onclick="showResults()">Show results</button><br>
+	<br>
+	
+	<br>
+	<input type="text" id="answerbox">
+	<button onclick="sendAnswer()">Try an answer</button><br>
+	<br><br>Response received:<br><br>
+	<div id="response-div"></div>
+
+</body>
+</html>
