@@ -19,17 +19,11 @@
 			joinGame();
 		};
 		
-		function sendMessage() {
-			var messageBox = document.getElementById('messagebox');
-			var textToSend = messageBox.value;
-
-			exampleSocket.send(JSON.stringify({
-				action: 'submit',
-				message: textToSend
-			}));
-		}
 		exampleSocket.onmessage = function(event){
 			console.log(event.data);
+
+			var state = JSON.parse(event.data);
+			
 			document.getElementById('response-div').innerHTML = event.data;
 		};
 
@@ -79,16 +73,14 @@
 		}
 	</script>
 	<br>
+	<button onclick="sendReset()">Reset</button><br>
+	<button onclick="question()">Ask for a question</button><br>
 	<br>
-	<input type="text" id="messagebox">
-	<button onclick="sendMessage()">Send submission</button>
-	<br> 
-	<button onclick="question()">Ask for a question</button>
+	
 	<br>
 	<input type="text" id="answerbox">
 	<button onclick="sendAnswer()">Try an answer</button><br>
-	<button onclick="sendReset()">Reset</button>
-	<br>
+	<br><br>Response received:<br><br>
 	<div id="response-div"></div>
 
 </body>
