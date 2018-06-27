@@ -34,7 +34,7 @@
 
 		function question() {
 			var req = new XMLHttpRequest();
-			req.open('POST', 'https://api.seawall.horse/question', true);
+			req.open('GET', 'https://api.seawall.horse/question', true);
 
 			req.onreadystatechange = function() {
 			    if (req.readyState === 4 && req.status === 200) {
@@ -44,6 +44,23 @@
 
 			req.send();
 		}
+
+		function sendAnswer() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'https://api.seawall.horse/answer', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			var ans = answerbox.value;
+
+			req.send(JSON.stringify({
+				answer: ans
+			}));
+		}
 	</script>
 	<br>
 	<br>
@@ -52,6 +69,8 @@
 	<br> 
 	<button onclick="question()">Ask for a question</button>
 	<br>
+	<input type="text" id="answerbox">
+	<button onclick="sendAnswer()">Try an answer</button>
 	<div id="response-div"></div>
 
 </body>
