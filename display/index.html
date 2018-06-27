@@ -73,7 +73,7 @@
 	        }
 
 	        if(state.remainingTime > 0) {
-				var timeSeconds = Number(message.displayTime) / 1000;
+				var timeSeconds = Number(state.remainingTime) / 1000;
 				startTimer(timeSeconds);
 			} else {
 				hideTimer();
