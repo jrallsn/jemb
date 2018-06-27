@@ -14,6 +14,7 @@
 'use strict';
 
 let fetch = require('node-fetch');
+// var request = require('request');
 
 // Import the Dialogflow module from the Actions on Google client library.
 const {dialogflow} = require('actions-on-google');
@@ -44,6 +45,7 @@ app.intent('Default Welcome Intent', conv => {
     return getQuestion().then((question) => {
         conv.ask("me");
     });
+    conv.ask("Let's go");
 });
 
 // If user answers yes then ask for Player 1 name
