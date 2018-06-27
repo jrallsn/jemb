@@ -1,0 +1,65 @@
+<html>
+<head>
+  <script src="https://use.fontawesome.com/16b88d82ba.js"></script>
+  <link rel="stylesheet" href="flashy.css" TYPE="text/css"/>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Pacifico" rel="stylesheet">
+</head>
+<body>
+	Welcome to: a game
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
+		var activeRoomId;
+		
+		function joinGame() {
+			exampleSocket.send(JSON.stringify({
+				action: 'joinMasterDisplay'
+			}));
+		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+
+			var state = JSON.parse(event.data);
+			var gameState = state.state;
+			var displayString = '';
+
+			switch (gameState) {
+	            case 'IDLE':
+	                displayString = 'Waiting to begin...';
+	                break;
+	            case 'COLLECTING_SUBMISSIONS':
+	                displayString = state.prompt;
+	                break;
+	            case 'SHOWING_RESULT':
+	                displayString = JSON.stringify(state.submissions);
+	                break;
+	            case 'GETTING_ANSWERS':
+	            	if (state.submittedAnswer) {
+	            		displayString = 'You said: ' + state.submittedAnswer + '<br><br>';
+	            		displayString += state.numMatching + ' people chose this';
+	            		if (state.rank > 0) {
+	            			displayString += ', making it the number ' + state.rank + ' ranked choice.';
+	            		} else {
+	            			displayString += '. Better luck next time!';
+	            		}
+	            	} else {
+	            		displayString = 'Waiting for player...';
+	            	}
+	                break;
+	        }
+
+	        document.getElementById('display-div').innerHTML = displayString;
+		};
+	</script>
+	<br><br>
+	<div id="display-div"></div>
+
+
+</body>
+</html>
