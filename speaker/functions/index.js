@@ -68,9 +68,5 @@ app.intent('player2_name', (conv, {name}) => {
     conv.ask(confirmName);
 });
 
-app.intent('status_no', (conv) => {
-    conv.close("fine, we can play without you");
-});
-
 // Set the DialogflowApp object to handle the HTTPS POST request.
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
