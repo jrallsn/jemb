@@ -61,12 +61,12 @@ app.intent('player1_name', (conv, {name}) => {
     conv.ask("Player 2, what's your name?");
 });
 
-// app.intent('player2_name', (conv, name) => {
-//     conv.user.storage.player2 = name;
-//     var confirmName = "Alright " + conv.user.storage.player2 + ". Get ready!";
-//     conv.ask(confirmName);
-// });
-
+// Save player 2 name
+app.intent('player2_name', (conv, {name}) => {
+    conv.user.storage.player2 = name;
+    var confirmName = "Alright " + conv.user.storage.player2 + ". Get ready!";
+    conv.ask(confirmName);
+});
 
 app.intent('status_no', (conv) => {
     conv.close("fine, we can play without you");
