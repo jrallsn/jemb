@@ -20,7 +20,8 @@ const resultsDisplayTime = 10000; // time to display results in ms
 const GameStates = {
     IDLE: 'IDLE',
     COLLECTING_SUBMISSIONS: 'COLLECTING_SUBMISSIONS',
-    SHOWING_RESULT: 'SHOWING_RESULT'
+    SHOWING_RESULT: 'SHOWING_RESULT',
+    GETTING_ANSWERS: 'GETTING_ANSWERS'
 };
 
 const questions = require('./questions.json');
@@ -72,6 +73,13 @@ app.get('/question', (req, res) => {
     updateAllClients(gameStateObject);
 
     res.json(gameStateObject);
+
+    setTimeout(function(){
+        gameStateObject.state = GameStates.GETTING_ANSWERS;
+        gameStateObject.remainingTime = 0;
+
+        updateAllClients(gameStateObject);
+    }, submissionTimeLimit);
 });
 
 app.post('/answer', (req, res) => {
@@ -85,17 +93,30 @@ app.post('/answer', (req, res) => {
     var ans = req.body.answer;
 
     result.submittedAnswer = ans;
-    result.numMatching = submissions[gameStateObject.currentQuestionNumber][ans];
+    result.numMatching = submissions[gameStateObject.currentQuestionNumber][ans] || 0;
     result.totalResponses = getTotalSubmissionsForQuestion(gameStateObject.currentQuestionNumber);
     if (result.totalResponses > 0) {
         result.percent = 100.0 * result.numMatching / result.totalResponses;
     }
+
+    // include game state in result
+    for (var stateMember in gameStateObject) {
+        if (!gameStateObject.hasOwnProperty(stateMember)) {
+            continue;
+        }
+
+        result[stateMember] = gameStateObject[stateMember];
+    }
+
+    updateMasterDisplays(result);
 
     res.json(result);
 });
 
 app.post('/reset', (req, res) => {
     gameStateObject = deepClone(defaultGameState);
+
+    updateAllClients(gameStateObject);
 
     res.json({});
 });
@@ -217,26 +238,6 @@ function getTotalSubmissionsForQuestion (questionNum) {
 }
 
 wss.on('connection', function connection(ws) {
-
-	///var roomId = generateId();
-	var type;
-
-	function initRoom(teamName){
-  		var roomId =  generateId();
-
-  		activeRooms[roomId] = {
-            teamName: teamName,
-            masterSocket: ws,
-            state: GameStates.WAITING_FOR_PLAYERS,
-            players: []
-        };
-
-  		ws.send(JSON.stringify({
-  			info: 'roomCreated',
-  			roomId: roomId,
-            state: activeRooms[roomId].state
-  		}));
-  	}
 
     function joinGameGeneric(clientArray, socket) {
         clientArray.push({
