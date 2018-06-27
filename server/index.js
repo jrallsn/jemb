@@ -115,6 +115,15 @@ app.post('/answer', (req, res) => {
     res.json(result);
 });
 
+app.post('/showresults', (req, res) => {
+    gameStateObject.state = GameStates.SHOWING_RESULT;
+
+    result = deepClone(gameStateObject);
+    result.submissions = submissions[gameStateObject.currentQuestionNumber];
+
+    updateMasterDisplays(result);
+});
+
 app.post('/reset', (req, res) => {
     gameStateObject = deepClone(defaultGameState);
 

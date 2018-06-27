@@ -1,0 +1,56 @@
+<html>
+<head>
+</head>
+<body>
+	SURVEY APP INDEX
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
+		var activeRoomId;
+		
+		function joinGame() {
+			exampleSocket.send(JSON.stringify({
+				action: 'joinSurveySubject'
+			}));
+		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+		
+		function sendMessage() {
+			var messageBox = document.getElementById('messagebox');
+			var textToSend = messageBox.value;
+
+			exampleSocket.send(JSON.stringify({
+				action: 'submit',
+				message: textToSend
+			}));
+		}
+
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+
+			var state = event.data;
+
+			if (state.currentGameState === 'COLLECTING_SUBMISSIONS') {
+				document.getElementById('response-div').innerHTML = state.prompt;
+			} else {
+				document.getElementById('response-div').innerHTML = 'WAITING';
+			}
+
+			document.getElementById('response-div').innerHTML = event.data;
+		};
+
+	</script>
+	<br>
+	<div id="prompt-div"></div>
+	<br>
+	<input type="text" id="messagebox">
+	<button onclick="sendMessage()">Send submission</button>
+	<br>
+	<div id="response-div"></div>
+
+</body>
+</html>

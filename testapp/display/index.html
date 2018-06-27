@@ -1,0 +1,37 @@
+<html>
+<head>
+</head>
+<body>
+	DISPLAY APP INDEX
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
+		var activeRoomId;
+		
+		function joinGame() {
+			exampleSocket.send(JSON.stringify({
+				action: 'joinMasterDisplay'
+			}));
+		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+		
+
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+			document.getElementById('response-div').innerHTML = event.data;
+		};
+
+
+	</script>
+	<br>
+	<br>
+	Most recent message received:
+	<br>
+	<div id="response-div"></div>
+
+</body>
+</html>

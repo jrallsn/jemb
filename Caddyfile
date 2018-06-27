@@ -8,7 +8,7 @@ api.seawall.horse {
 		transparent
 	}
 }
-blar.seawall.horse {
+blar.seawall.horse ws.seawall.horse {
    proxy / localhost:3000 {
       websocket
    }
