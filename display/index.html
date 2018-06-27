@@ -2,10 +2,10 @@
 <head>
   <script src="https://use.fontawesome.com/16b88d82ba.js"></script>
   <link rel="stylesheet" href="flashy.css" TYPE="text/css"/>
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Pacifico" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Pacifico|Righteous" rel="stylesheet">
 </head>
 <body>
-	<div id="title">Welcome to: a game</div>
+	<div id="title">IX FEUD and the HOLOGRAMS</div>
 
 	<script type="text/javascript">
 		
@@ -32,14 +32,15 @@
 			switch (gameState) {
 	            case 'IDLE':
 	                displayString = 'Waiting to begin...';
-	                document.getElementById('section-board').style.display = "none";
+	               // document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'COLLECTING_SUBMISSIONS':
 	                displayString = state.prompt;
-	                document.getElementById('section-board').style.display = "none";
+	                //document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'SHOWING_RESULT':
-	                displayString = JSON.stringify(state.submissions);
+	                //displayString = JSON.stringify(state.submissions);
+	                displayString = 'All answers to<br>' + state.prompt + ':<br>';
 
 	                var submissionsString = '';
 	                for (var i = 0; i < state.submissions.length; i++) {
@@ -48,7 +49,7 @@
 	                	var answerText = answer.answer;
 	                	var answerCount = answer.count;
 
-	                	submissionsString += '<span class="answer" id="answer-' + i + '">' + answerText + ' - ' + answerCount + '</div>';
+	                	submissionsString += '<span class="answer" id="answer-' + i + '">' + answerText + ' - ' + answerCount + '</span>';
 
 	                	document.getElementById('section-board').style.display = "";
 	                	document.getElementById('section-board').innerHTML = submissionsString;
@@ -67,12 +68,12 @@
 	            	} else {
 	            		displayString = 'Waiting for player...';
 	            	}
-	            	document.getElementById('section-board').style.display = "none";
+	            	//document.getElementById('section-board').style.display = "none";
 	                break;
 	        }
 
 	        if(state.remainingTime > 0) {
-				var timeSeconds = Number(message.displayTime) / 1000;
+				var timeSeconds = Number(state.remainingTime) / 1000;
 				startTimer(timeSeconds);
 			} else {
 				hideTimer();
@@ -117,7 +118,7 @@
 		<span id='remainingTime'>
 		</span>
 		<div id='waiting'>
-			<img src="dancing.gif">
+		<!--	<img src="dancing.gif"> -->
 		</div>
 	</div>
 
@@ -127,11 +128,11 @@
 	</div>
 
 	<div id='section-secondary'>
-		<div id="display-div">gimme dat boat</div>
+		<div id="display-div"></div>
 	</div>
-
+<br><br>
 	<div id='section-board' style="display: none;">
-		<span class="answer" id="answer-1">whatevers - a</div> 
+
 	</div>	
 
 	<div id='countdown' style="display:none"></div>

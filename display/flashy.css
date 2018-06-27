@@ -1,24 +1,24 @@
 body {
   font-family: 'Ubuntu', sans-serif;
-  background-color: #E27A3F;
-  border-top: #DF5A49 50px solid;
+  background-color: #48A74A;
+  border-top: #198A7A 50px solid;
   padding: 0px;
   margin: 0px;
   text-align: center;
 }
 
 div#countdown {
-  font-family: 'Pacifico', cursive;
-  color: #EFC94C;
+  font-family: 'Righteous', cursive;
+  color: #D0DC3F;
   font-size: 100px;
 }
 
 div#title {
-  font-family: 'Pacifico', cursive;
+  font-family: 'Righteous', cursive;
   font-color: #ffffff;
   font-size: 100px;
   color: #ffffff;
-  text-transform: lowercase;
+/*  text-transform: lowercase;*/
   margin-bottom: 20px;
 }
 
@@ -113,15 +113,14 @@ div#waiting img {
 span.answer {
   border: none;
   margin: 5px;
-  background-color: #ffffff;
-  padding: 5px;
+  padding: 15px;
   display: inline-block;
   text-align: bottom;
-  font-size: 20px;
+  font-size: 40px;
   font-weight: bold;
   font-family: 'Josefin Sans', sans-serif;
-  background-color: #EFC94C;
-  border-radius: 15px;
+  background-color: #D0DC3F;
+  border-radius: 5px;
 }
 
 span.voted i {
@@ -136,7 +135,7 @@ span#remainingTime {
   border: none;
   display: inline-block;
   position: absolute;
-  background-color: #EFC94C;
+  background-color: #D0DC3F;
   left: 0px;
   top: 0px;
   height: 50px;

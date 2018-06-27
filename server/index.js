@@ -49,6 +49,8 @@ app.get('/hello', (req, res) => res.send('Hello World!'));
 app.get('/state', (req, res) => res.json(gameStateObject));
 
 app.get('/question', (req, res) => {
+console.log('QUESTION');
+
     if (gameStateObject.state !== GameStates.IDLE) {
         res.json(gameStateObject);
         return;
@@ -346,4 +348,8 @@ wss.on('connection', function connection(ws) {
   	});
 
   	//ws.send('something');
+});
+
+wss.on('error', function(error){
+    console.log(error);
 });
