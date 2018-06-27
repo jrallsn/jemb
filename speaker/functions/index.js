@@ -22,7 +22,20 @@ const functions = require('firebase-functions');
 // Instantiate the Dialogflow client.
 const app = dialogflow({debug: true});
 
-// Import utils
+//Send an async ajax request to a server with a callback function
+function send(method, url, data, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+      if (xhr.status !== 200) return callback("[" + xhr.status + "]" + xhr.responseText, null);
+      return callback(null, JSON.parse(xhr.responseText, dateParser));
+  };
+  xhr.open(method, url, true);
+  if (!data) xhr.send();
+  else {
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify(data));
+  }
+}
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
 app.intent('Default Welcome Intent', (conv) => {
@@ -45,6 +58,7 @@ app.intent('status_yes', (conv) => {
     // Ask Player 1 name
     conv.ask("Player 1, what's your name?");
     // Game show music
+
     // Question One Intro
     // Generate Random question from list
     // Play waiting sound while polling
@@ -58,6 +72,8 @@ app.intent('status_yes', (conv) => {
 // Save player 1 name and ask for player 2 name
 app.intent('player1_name', (conv, {name}) => {
     conv.user.storage.player1 = name;
+    conv.user.storage.score1 = 0;
+
     var confirmName = "Alright " + conv.user.storage.player1 + ". Get ready!";
     conv.ask(confirmName);
     conv.ask("Player 2, what's your name?");
@@ -66,30 +82,38 @@ app.intent('player1_name', (conv, {name}) => {
 // Save player 2 name
 app.intent('player2_name', (conv, {name}) => {
     conv.user.storage.player2 = name;
+    conv.user.storage.score2 = 0;
+
     var confirmName = "Alright " + conv.user.storage.player2 + ". Get ready!";
     conv.ask(confirmName);
 
     // Game show music
     const ssml = `<speak>
-  <par>
-    <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
-      <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="5.0s">
-        <desc>Game intro</desc>
-      </audio>
-Welcome to another game of I X Feud! Here's a rundown of how this will go: Audience, you will have 20 seconds to input your one word answer to the question on your phones. Then each player will get the chance to 
-      guess what the most popular answer was. Points will be calculated based on how many audience members chose the same answer. After 3 rounds, the person with the most points will receive...
-    </media>
-    <media xml:id="drums" begin="intro.end" soundLevel="5dB" fadeOutDur="1.0s">
-      <audio src="https://actions.google.com/sounds/v1/cartoon/drum_roll.ogg" clipBegin="18.0s" clipEnd="20.0s"></audio>
-    </media>
-    <media xml:id="pride" begin="drums.end" soundLevel="5dB">
-        <speak>Nothing! The Earth still spins</speak>
-    </media>
-  </par>
-</speak>`;
-conv.ask(ssml);
-});
+      <par>
+        <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
+          <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="5.0s">
+            <desc>Game intro</desc>
+          </audio>
+            Welcome to another game of I X Feud! Here's a rundown of how this will go: Audience, you will have 20 seconds to input your one word answer to the question on your phones. Then each player will get the chance to guess what the most popular answer was. Points will be calculated based on how many audience members chose the same answer. After 3 rounds, the person with the most points will receive...
+        </media>
+        <media xml:id="drums" begin="intro.end" soundLevel="5dB" fadeOutDur="1.0s">
+          <audio src="https://actions.google.com/sounds/v1/cartoon/drum_roll.ogg" clipBegin="18.0s" clipEnd="20.0s"></audio>
+        </media>
+        <media xml:id="pride" begin="drums.end" soundLevel="5dB">
+            <speak>Nothing! The Earth still spins</speak>
+        </media>
+      </par>
+    </speak>`;
 
+    //conv.ask(ssml);
+    conv.ask("Audience, get ready for question 1!");
+
+    send('GET', 'https://api.seawall.horse/question', undefined, function (err, data) {
+      if (err) return console.log(err);
+
+      conv.ask(data);
+    })
+});
 
 
 
