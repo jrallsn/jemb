@@ -32,11 +32,11 @@
 			switch (gameState) {
 	            case 'IDLE':
 	                displayString = 'Waiting to begin...';
-	               // document.getElementById('section-board').style.display = "none";
+	                document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'COLLECTING_SUBMISSIONS':
 	                displayString = state.prompt;
-	                //document.getElementById('section-board').style.display = "none";
+	                document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'SHOWING_RESULT':
 	                //displayString = JSON.stringify(state.submissions);
@@ -68,7 +68,7 @@
 	            	} else {
 	            		displayString = 'Waiting for player...';
 	            	}
-	            	//document.getElementById('section-board').style.display = "none";
+	            	document.getElementById('section-board').style.display = "none";
 	                break;
 	        }
 
