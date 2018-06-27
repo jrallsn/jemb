@@ -34,7 +34,7 @@
 
 		function question() {
 			var req = new XMLHttpRequest();
-			req.open('POST', 'http://api.seawall.horse:4000/question', true);
+			req.open('POST', 'https://api.seawall.horse/api/question', true);
 
 			req.onreadystatechange = function() {
 			    if (req.readyState === 4 && req.status === 200) {
@@ -50,6 +50,8 @@
 	<input type="text" id="messagebox">
 	<button onclick="sendMessage()">Send submission</button>
 	<br> 
+	<button onclick="question()">Ask for a question</button>
+	<br>
 	<div id="response-div"></div>
 
 </body>

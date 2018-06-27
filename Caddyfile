@@ -4,8 +4,13 @@ seawall.horse www.seawall.horse www.seawall.horse/m seawall.horse/m {
 www.seawall.horse/p seawall.horse/p {
 	root ./playerapp
 }
-api.seawall.horse/t www.seawall.horse/t seawall.horse/t {
+api.seawall.horse/t {
 	root ./test
+}
+api.seawall.horse/api {
+	proxy /api localhost:4000 {
+		transparent
+	}
 }
 api.seawall.horse {
    proxy / localhost:3000 {
