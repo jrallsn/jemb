@@ -13,7 +13,7 @@
 
 'use strict';
 
-let fetch = require('node-fetch');
+// let fetch = require('node-fetch');
 
 // Import the Dialogflow module from the Actions on Google client library.
 const {dialogflow} = require('actions-on-google');
@@ -24,27 +24,23 @@ const functions = require('firebase-functions');
 // Instantiate the Dialogflow client.
 const app = dialogflow({debug: true});
 
-
 const asyncTask = () => new Promise(
   resolve => setTimeout(resolve, 1000)
 );
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
 app.intent('Default Welcome Intent', conv => {
-//     const ssml = `
-//         <speak>
-//   <par>
-//     <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
-//             <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
-//             Welcome to I X Feud!
-//     </media>
-//   </par>
-// </speak>`;
-    //conv.ask(ssml);
-    //conv.ask("You ready dawg?");
-    return getQuestion().then((question) => {
-        conv.ask("me");
-    });
+    const ssml = `
+        <speak>
+  <par>
+    <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
+            <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
+            Welcome to I X Feud!
+    </media>
+  </par>
+</speak>`;
+    conv.ask(ssml);
+    conv.ask("You ready dawg?");
 });
 
 // If user answers yes then ask for Player 1 name
@@ -108,8 +104,8 @@ function getQuestion() {
         };
         req.send();
     });*/
-    return fetch('https://api.seawall.horse/question')
-    .then(() => {return 'oh my god please work';});
+    // return fetch('https://api.seawall.horse/question')
+    // .then(() => {return 'oh my god please work';});
 }
 
 // Save player 2 name
@@ -138,7 +134,7 @@ app.intent('player2_name', (conv, {name}) => {
       </par>
     </speak>`;
 
-    //conv.ask(ssml);
+    conv.ask(ssml);
     conv.ask("Audience, get ready for question 1!");
 
     // send('GET', 'https://api.seawall.horse/question', undefined, function (err, data) {
@@ -146,14 +142,6 @@ app.intent('player2_name', (conv, {name}) => {
 
     //   conv.ask(data);
     // })
-});
-
-// Handle the Dialogflow intent named 'favorite color'.
-// The intent collects a parameter named 'color'.
-app.intent('favorite color', (conv, {color}) => {
-    const luckyNumber = color.length;
-    // Respond with the user's lucky number and end the conversation.
-    conv.close('Your lucky number is ' + luckyNumber);
 });
 
 // Set the DialogflowApp object to handle the HTTPS POST request.
