@@ -1,0 +1,30 @@
+body {
+    background: grey;
+    color: white;
+  }
+  #x {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    border: 50px solid gray;
+    margin: 0; 
+  }
+  #question {
+    font-size: 96px;
+  }
+  #answerForm {
+    font-size: 48px;
+  }
+  #countdown {
+    font-size: 96px;
+  }
+  #remainingTime {
+    border: none;
+    display: inline-block;
+    position: absolute;
+    background-color: #EFC94C;
+    left: 0px;
+    top: 0px;
+    height: 50px;
+    width: 0;
+  }
