@@ -8,14 +8,17 @@
 		
 		var exampleSocket = new WebSocket("wss://blar.seawall.horse/");
 		var activeRoomId;
-		exampleSocket.onopen = function(event) {
-			console.log('opened socket');
-		};
+		
 		function joinGame() {
 			exampleSocket.send(JSON.stringify({
 				action: 'joinMasterDisplay'
 			}));
 		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+		
 		function sendMessage() {
 			var messageBox = document.getElementById('messagebox');
 			var textToSend = messageBox.value;
@@ -30,7 +33,7 @@
 			document.getElementById('response-div').innerHTML = event.data;
 		};
 
-		joinGame();
+		
 
 		function question() {
 			var req = new XMLHttpRequest();
