@@ -16,6 +16,8 @@ ws.onerror = function(event) {
 
 ws.onopen = function(event) {
   console.log('ws: opened socket');
+  joinGame();
+  waiting();
 };
 
 $("#thanks").hide();
@@ -30,7 +32,7 @@ ws.onmessage = function(event){
     html = '<p>' + data.prompt + '</p>';
     document.getElementById('question').innerHTML = html;
     console.log('html: ' + html);
-    startTimer(data.remainingTime);
+    startTimer(data.remainingTime/1000);
     $("#survey").show();
     $("#state").hide();
   } else {
@@ -50,7 +52,6 @@ function joinGame() {
   ws.send(JSON.stringify({
     action: 'joinSurveySubject'
   }));
-  $("#start").hide();
 }
 
 function startTimer(numSeconds) {
