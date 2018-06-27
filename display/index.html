@@ -1,0 +1,140 @@
+<html>
+<head>
+  <script src="https://use.fontawesome.com/16b88d82ba.js"></script>
+  <link rel="stylesheet" href="flashy.css" TYPE="text/css"/>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Pacifico|Righteous" rel="stylesheet">
+</head>
+<body>
+	<div id="title">IX FEUD and the HOLOGRAMS</div>
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
+		var timerIntervalId;
+		
+		function joinGame() {
+			exampleSocket.send(JSON.stringify({
+				action: 'joinMasterDisplay'
+			}));
+		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+
+			var state = JSON.parse(event.data);
+			var gameState = state.state;
+			var displayString = '';
+
+			switch (gameState) {
+	            case 'IDLE':
+	                displayString = 'Waiting to begin...';
+	               // document.getElementById('section-board').style.display = "none";
+	                break;
+	            case 'COLLECTING_SUBMISSIONS':
+	                displayString = state.prompt;
+	                //document.getElementById('section-board').style.display = "none";
+	                break;
+	            case 'SHOWING_RESULT':
+	                //displayString = JSON.stringify(state.submissions);
+	                displayString = 'All answers to<br>' + state.prompt + ':<br>';
+
+	                var submissionsString = '';
+	                for (var i = 0; i < state.submissions.length; i++) {
+	                	var answer = state.submissions[i];
+
+	                	var answerText = answer.answer;
+	                	var answerCount = answer.count;
+
+	                	submissionsString += '<span class="answer" id="answer-' + i + '">' + answerText + ' - ' + answerCount + '</span>';
+
+	                	document.getElementById('section-board').style.display = "";
+	                	document.getElementById('section-board').innerHTML = submissionsString;
+	                }
+
+	                break;
+	            case 'GETTING_ANSWERS':
+	            	if (state.submittedAnswer) {
+	            		displayString = 'You said: ' + state.submittedAnswer + '<br><br>';
+	            		displayString += state.numMatching + ' people chose this';
+	            		if (state.rank > 0) {
+	            			displayString += ', making it the number ' + state.rank + ' ranked choice.';
+	            		} else {
+	            			displayString += '. Better luck next time!';
+	            		}
+	            	} else {
+	            		displayString = 'Waiting for player...';
+	            	}
+	            	//document.getElementById('section-board').style.display = "none";
+	                break;
+	        }
+
+	        if(state.remainingTime > 0) {
+				var timeSeconds = Number(state.remainingTime) / 1000;
+				startTimer(timeSeconds);
+			} else {
+				hideTimer();
+			}
+
+	        document.getElementById('display-div').innerHTML = displayString;
+		};
+
+		function startTimer(numSeconds) {
+			totalTime = numSeconds;
+			if(timerIntervalId){
+				clearInterval(timerIntervalId);
+			}
+			var timerDiv = document.getElementById('countdown');
+			var seconds = Number(numSeconds);
+			timerDiv.innerHTML = seconds;
+			timerDiv.style.display = "";
+
+			timerIntervalId = setInterval(function(){
+				seconds--;
+				remainingTime = seconds;
+
+				document.getElementById('timer').style.display = "";
+				document.getElementById('remainingTime').style.width = remainingTime / totalTime * 100 + "%";
+
+				timerDiv.innerHTML = seconds;
+				if(seconds === 0){
+					clearInterval(timerIntervalId);
+				}
+			}, 1000);
+		}
+
+		function hideTimer() {
+			var timerDiv = document.getElementById('countdown');
+			clearInterval(timerIntervalId);
+			timerDiv.style.display = "none";
+			document.getElementById('timer').style.display = "none";
+		}
+	</script>
+
+	<div id='timer' style="display: none;">
+		<span id='remainingTime'>
+		</span>
+		<div id='waiting'>
+		<!--	<img src="dancing.gif"> -->
+		</div>
+	</div>
+
+	<br><br>
+	<div id='section-main'>
+		
+	</div>
+
+	<div id='section-secondary'>
+		<div id="display-div"></div>
+	</div>
+<br><br>
+	<div id='section-board' style="display: none;">
+
+	</div>	
+
+	<div id='countdown' style="display:none"></div>
+</body>
+</html>

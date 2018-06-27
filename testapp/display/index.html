@@ -1,0 +1,61 @@
+<html>
+<head>
+</head>
+<body>
+	DISPLAY APP INDEX
+
+	<script type="text/javascript">
+		
+		var exampleSocket = new WebSocket("wss://ws.seawall.horse/");
+		var activeRoomId;
+		
+		function joinGame() {
+			exampleSocket.send(JSON.stringify({
+				action: 'joinMasterDisplay'
+			}));
+		}
+		exampleSocket.onopen = function(event) {
+			console.log('opened socket');
+			joinGame();
+		};
+		
+
+		exampleSocket.onmessage = function(event){
+			console.log(event.data);
+
+			var state = JSON.parse(event.data);
+			var gameState = state.state;
+			var displayString = '';
+
+			switch (gameState) {
+	            case 'IDLE':
+	                displayString = 'waiting to start';
+	                break;
+	            case 'COLLECTING_SUBMISSIONS':
+	                displayString = 'Submit your answers to:<br>' + state.prompt;
+	                break;
+	            case 'SHOWING_RESULT':
+	                displayString = JSON.stringify(state.submissions);
+	                break;
+	            case 'GETTING_ANSWERS':
+	            	if (state.submittedAnswer) {
+	            		displayString = JSON.stringify(state.submittedAnswer);
+	            	} else {
+	            		displayString = 'Waiting for player...'
+	            	}
+	                break;
+	        }
+
+	        document.getElementById('display-div').innerHTML = displayString;
+			document.getElementById('response-div').innerHTML = event.data;
+		};
+
+
+	</script>
+	<br><br>
+	<div id="display-div"></div>
+	<br><br>Raw Response received:<br><br>
+	<div id="response-div"></div>
+
+</body>
+</html>

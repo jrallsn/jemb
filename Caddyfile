@@ -1,10 +1,20 @@
-seawall.horse www.seawall.horse www.seawall.horse/m seawall.horse/m {
-   root ./masterapp
+ix.seawall.horse/t {
+	root ./testapp
 }
-www.seawall.horse/p seawall.horse/p {
-	root ./playerapp
+ix.seawall.horse/display {
+	root ./display
+}
+ix.seawall.horse/static {
+	root ./static
 }
 api.seawall.horse {
+	cors
+
+	proxy / localhost:4000 {
+		transparent
+	}
+}
+blar.seawall.horse ws.seawall.horse {
    proxy / localhost:3000 {
       websocket
    }
