@@ -8,17 +8,17 @@ body {
 }
 
 div#countdown {
-  font-family: 'Pacifico', cursive;
+  font-family: 'Righteous', cursive;
   color: #D0DC3F;
   font-size: 100px;
 }
 
 div#title {
-  font-family: 'Pacifico', cursive;
+  font-family: 'Righteous', cursive;
   font-color: #ffffff;
   font-size: 100px;
   color: #ffffff;
-  text-transform: lowercase;
+/*  text-transform: lowercase;*/
   margin-bottom: 20px;
 }
 
