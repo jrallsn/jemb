@@ -25,22 +25,20 @@ const app = dialogflow({debug: true});
 // Import utils
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('status_default', (conv) => {
-    const ssml = `
-        <speak>
-            <audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>
-            Welcome to I X Feud!
-        </speak>`;
+app.intent('Default Welcome Intent', (conv) => {
+    const ssml = '<speak><audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>Welcome to I X Feud!</speak>';
     conv.ask(ssml);
-
     conv.ask("You ready dawg?");
 });
 
+// If user answers yes then ask for Player 1 name
 app.intent('status_yes', (conv) => {
-    conv.ask("starting game");
-    // Game show music
+    conv.ask("Alright let's go!");
     // Ask Player 1 name
-    // Ask Player 2 name
+    conv.ask("Player 1, what's your name?");
+
+
+    // Game show music
     // Question One Intro
     // Generate Random question from list
     // Play waiting sound while polling
@@ -49,8 +47,22 @@ app.intent('status_yes', (conv) => {
     // Ask Player 2
     // Record Response
     // Show/Say points
-
 });
+
+// Save player 1 name and ask for player 2 name
+app.intent('player1_name', (conv, {name}) => {
+    conv.user.storage.player1 = name;
+    var confirmName = "Alright " + conv.user.storage.player1 + ". Get ready!";
+    conv.ask(confirmName);
+    conv.ask("Player 2, what's your name?");
+});
+
+// app.intent('player2_name', (conv, name) => {
+//     conv.user.storage.player2 = name;
+//     var confirmName = "Alright " + conv.user.storage.player2 + ". Get ready!";
+//     conv.ask(confirmName);
+// });
+
 
 app.intent('status_no', (conv) => {
     conv.close("fine, we can play without you");
