@@ -14,6 +14,9 @@ ws.onopen = function(event) {
   onOpen(event);
 };
 
+$("#thanks").hide();
+$("#poll").show();
+
 function onOpen(evt) {
   /* var message = {
     action: 'joinSurveySubject'
@@ -78,4 +81,13 @@ function hideTimer() {
 }
 
 function sendMessage() {
+  $("#poll").hide();
+  $("#thanks").show();
+  console.log('sendMessage!!!!');
+}
+
+function another() {
+  $("#poll").show();
+  $("#thanks").hide();
+  console.log('another!!!!');
 }

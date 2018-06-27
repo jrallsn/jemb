@@ -29,8 +29,9 @@
 
 </head>
 <body>
-  <script type="text/javascript" src="player.js"></script>
-  <div class="container" id="x">
+<div class="container" id="main">
+
+  <div id="poll">
     <div class="ui grid page">
       <div class="sixteen wide column">
         <div id="question"></div>
@@ -54,15 +55,27 @@
       </div>
 
       <div class="sixteen wide column">
-          <div id="countdown" style="display:none"></div>
+          <div id="countdown"></div>
       </div>
 
       <div class="sixteen wide column">
           <div id="remainingTime"></div>
       </div>
 
+    </div> <!-- grid -->
+  </div> <!-- poll -->
+
+  <div class="sixteen wide column">
+    <div id="thanks">
+      <p>Thanks a lot!</p>
+      <div class="massive ui right floated teal button"
+        id="xyz"
+        onClick="another()">Another</div>
     </div>
   </div>
+
 </div>
+<script type="text/javascript" src="player.js"></script>
+
 </body>
 </html>
