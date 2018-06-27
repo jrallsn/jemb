@@ -24,6 +24,10 @@ const functions = require('firebase-functions');
 // Instantiate the Dialogflow client.
 const app = dialogflow({debug: true});
 
+const asyncTask = () => new Promise(
+  resolve => setTimeout(resolve, 1000)
+);
+
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
 app.intent('Default Welcome Intent', conv => {
     const ssml = `
