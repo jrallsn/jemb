@@ -5,7 +5,9 @@ const express = require('express');
 const app = express();
 var bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+    type: '*/*'
+}));
 
 const wsPort = 3000;
 const restPort = 4000;
