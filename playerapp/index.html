@@ -13,13 +13,15 @@
 <body>
 <div class="container" id="main">
   <div id="start">
+    <div class="ui centered grid">
       <div class="massive ui teal button"
-      onClick="joinGame()">Join Game
+          onClick="joinGame()">Join Game
       </div>
+    </div>
   </div>
 
-  <div id="poll">
-    <div class="ui grid page">
+  <div id="survey">
+    <div class="ui centered grid">
       <div class="sixteen wide column">
         <div id="question"></div>
       </div>
@@ -52,16 +54,17 @@
       </div>
 
     </div> <!-- grid -->
-  </div> <!-- poll -->
+  </div> <!-- survey -->
 
-  <div class="sixteen wide column">
-    <div id="thanks">
-      <p>Thanks a lot!</p>
-      <div class="massive ui right floated teal button"
-        id="xyz"
-        onClick="another()">Another</div>
-    </div>
+  <div id="thanks">
+      <div class="ui centered grid">
+          <div class="sixteen wide column">
+              <p>Thanks for answering.</p>
+          </div>
+      </div>
   </div>
+
+  <div id="state"></div>
 
 </div>
 <script type="text/javascript" src="player.js"></script>

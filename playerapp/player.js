@@ -10,7 +10,7 @@ ws.onclose = function(event) {
 //ws.onmessage = function(evt) { onMessage(evt) };
 ws.onerror = function(event) {
   console.log('ws: error');
-  $("#poll").hide();
+  $("#survey").hide();
 
 };
 
@@ -19,37 +19,36 @@ ws.onopen = function(event) {
 };
 
 $("#thanks").hide();
-$("#poll").show();
-
-// function onOpen(evt) {
-//   /* var message = {
-//     action: 'joinSurveySubject'
-//   }
-//   */
-//   var message = {
-//     state: 'ask',
-//     remainingTime: 5,
-//     prompt: 'What do you put on your feet?'
-//   };
-//   ws.send(JSON.stringify(message));
-// }
+$("#survey").hide();
 
 ws.onmessage = function(event){
   console.log(JSON.stringify(event.data));
   var data = JSON.parse(event.data);
-  if (data.prompt) {
+  if (data.state === 'COLLECTING_SUBMISSIONS') {
     var html = '';
     html = '<p>' + data.prompt + '</p>';
     document.getElementById('question').innerHTML = html;
+    $("#survey").show();
+    $("#state").hide();
+  } else {
+    waiting();
   }
+
   console.log('html: ' + html);
   startTimer(10);
 };
+
+function waiting() {
+  document.getElementById('state').innerHTML = 'Waiting for a survey question...';
+  $("#survey").hide();
+  $("#state").show();
+}
 
 function joinGame() {
   ws.send(JSON.stringify({
     action: 'joinSurveySubject'
   }));
+  $("#start").hide();
 }
 
 function startTimer(numSeconds) {
@@ -79,21 +78,25 @@ function hideTimer() {
 }
 
 function sendMessage() {
-  
+
   if( ! $('.ui.form').form('is valid', 'answer')) {
     console.log('invalid!!!');
     $('.ui.form').form('valiate field', 'answer');
     return;
   }
   
-  $("#poll").hide();
+  $("#survey").hide();
   $("#thanks").show();
-  console.log('sendMessage!!!!');
-  
+  console.log('ws: send: ' + document.getElementById('answer').value);
+  ws.send(JSON.stringify({
+    action: 'submit',
+    message: document.getElementById('answer').value
+  }));
+  waiting();
 }
 
-function another() {
-  $("#poll").show();
-  $("#thanks").hide();
-  console.log('another!!!!');
-}
+// function another() {
+//   $("#survey").show();
+//   $("#thanks").hide();
+//   console.log('another!');
+// }

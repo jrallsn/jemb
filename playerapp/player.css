@@ -12,9 +12,15 @@ body {
   #question {
     font-size: 96px;
   }
+  
   #answer {
     font-size: 48px;
   }
+
+  #thanks {
+    font-size: 48px;
+  }
+
   #countdown {
     font-size: 64px;
     text-align: center
