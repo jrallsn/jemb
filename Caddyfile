@@ -4,6 +4,9 @@ ix.seawall.horse/t {
 ix.seawall.horse/display {
 	root ./display
 }
+ix.seawall.horse/static {
+	root ./static
+}
 api.seawall.horse {
 	cors
 
