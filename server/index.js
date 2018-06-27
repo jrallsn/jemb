@@ -347,3 +347,7 @@ wss.on('connection', function connection(ws) {
 
   	//ws.send('something');
 });
+
+wss.on('error', function(error){
+    console.log(error);
+});
