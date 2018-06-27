@@ -13,10 +13,15 @@
 
 'use strict';
 
+<<<<<<< HEAD
 // let fetch = require('node-fetch');
 let request = require('request');
 
 // let fetch = require('node-fetch');
+=======
+let fetch = require('node-fetch');
+// var request = require('request');
+>>>>>>> 51ab94169bf7892f9490fb0e6343b0b66babbcc9
 
 // Import the Dialogflow module from the Actions on Google client library.
 const {dialogflow} = require('actions-on-google');

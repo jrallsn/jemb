@@ -25,6 +25,7 @@ body {
   #state {
     font-size: 36px;
     text-align: center;
+    line-height: 150%;
     height: 100%;   
   }
 
