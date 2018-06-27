@@ -39,7 +39,8 @@
 	                document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'SHOWING_RESULT':
-	                displayString = JSON.stringify(state.submissions);
+	                //displayString = JSON.stringify(state.submissions);
+	                displayString = 'All answers to<br>' + state.prompt + ':<br>';
 
 	                var submissionsString = '';
 	                for (var i = 0; i < state.submissions.length; i++) {
@@ -48,7 +49,7 @@
 	                	var answerText = answer.answer;
 	                	var answerCount = answer.count;
 
-	                	submissionsString += '<span class="answer" id="answer-' + i + '">' + answerText + ' - ' + answerCount + '</div>';
+	                	submissionsString += '<span class="answer" id="answer-' + i + '">' + answerText + ' - ' + answerCount + '</span>';
 
 	                	document.getElementById('section-board').style.display = "";
 	                	document.getElementById('section-board').innerHTML = submissionsString;
