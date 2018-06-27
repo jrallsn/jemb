@@ -14,6 +14,9 @@
 'use strict';
 
 // let fetch = require('node-fetch');
+let request = require('request');
+
+// let fetch = require('node-fetch');
 
 // Import the Dialogflow module from the Actions on Google client library.
 const {dialogflow} = require('actions-on-google');
@@ -27,48 +30,6 @@ const app = dialogflow({debug: true});
 const asyncTask = () => new Promise(
   resolve => setTimeout(resolve, 1000)
 );
-
-// Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('Default Welcome Intent', conv => {
-    const ssml = `
-        <speak>
-  <par>
-    <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
-            <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
-            Welcome to I X Feud!
-    </media>
-  </par>
-</speak>`;
-    conv.ask(ssml);
-    conv.ask("You ready dawg?");
-});
-
-// If user answers yes then ask for Player 1 name
-app.intent('status_yes', (conv) => {
-    conv.ask("Alright let's go!");
-    // Ask Player 1 name
-    conv.ask("Player 1, what's your name?");
-    // Game show music
-
-    // Question One Intro
-    // Generate Random question from list
-    // Play waiting sound while polling
-    // Ask Player 1
-    // Record Response
-    // Ask Player 2
-    // Record Response
-    // Show/Say points
-});
-
-// Save player 1 name and ask for player 2 name
-app.intent('player1_name', (conv, {name}) => {
-    conv.user.storage.player1 = name;
-    conv.user.storage.score1 = 0;
-
-    var confirmName = "Alright " + conv.user.storage.player1 + ". Get ready!";
-    conv.ask(confirmName);
-    conv.ask("Player 2, what's your name?");
-});
 
 function getQuestion() {
     // return new Promise(resolve => {
@@ -106,7 +67,74 @@ function getQuestion() {
     });*/
     // return fetch('https://api.seawall.horse/question')
     // .then(() => {return 'oh my god please work';});
+   return new Promise((resolve) => {
+        request('https://api.seawall.horse/question', function(error, response, body){
+            if (!error && response.statusCode == 200) {
+                //here put what you want to do with the request
+                var thing = '';
+                try {
+                    thing = JSON.parse(body);
+                } catch(e) {}
+                resolve(thing);
+            }
+            else{
+                resolve("Error");
+            }
+        });
+    });
+    //return Promise.resolve();
 }
+
+// Handle the Dialogflow intent named 'Default Welcome Intent'.
+app.intent('Default Welcome Intent', conv => {
+//     const ssml = `
+//         <speak>
+//   <par>
+//     <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
+//             <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
+//             Welcome to I X Feud!
+//     </media>
+//   </par>
+// </speak>`;
+//     conv.ask(ssml);
+//     conv.ask("You ready dawg?");
+     return getQuestion().then((question) => {
+            if (typeof question === 'string') {
+                //error case
+                conv.ask(question);
+            } else {
+                conv.ask(question.prompt);
+            }
+         });
+        //conv.ask("Let's go");
+    });
+
+// If user answers yes then ask for Player 1 name
+app.intent('status_yes', (conv) => {
+    conv.ask("Alright let's go!");
+    // Ask Player 1 name
+    conv.ask("Player 1, what's your name?");
+    // Game show music
+
+    // Question One Intro
+    // Generate Random question from list
+    // Play waiting sound while polling
+    // Ask Player 1
+    // Record Response
+    // Ask Player 2
+    // Record Response
+    // Show/Say points
+});
+
+// Save player 1 name and ask for player 2 name
+app.intent('player1_name', (conv, {name}) => {
+    conv.user.storage.player1 = name;
+    conv.user.storage.score1 = 0;
+
+    var confirmName = "Alright " + conv.user.storage.player1 + ". Get ready!";
+    conv.ask(confirmName);
+    conv.ask("Player 2, what's your name?");
+});
 
 // Save player 2 name
 app.intent('player2_name', (conv, {name}) => {
