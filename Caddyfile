@@ -1,7 +1,7 @@
 ix.seawall.horse/t {
 	root ./testapp
 }
-ix.seawall.horse/s ix.seawall.horse/p ix.seawall.horse/player ix.seawall.horse/survey {
+ix.seawall.horse/survey/ {
 	root ./playerapp
 	mime .css text/css
 	mime .js text/javascript
@@ -24,3 +24,7 @@ blar.seawall.horse ws.seawall.horse {
       websocket
    }
 }
+redir ix.seawall.horse/s ix.seawall.horse/survey/
+redir ix.seawall.horse/p ix.seawall.horse/survey/
+redir ix.seawall.horse/survey ix.seawall.horse/survey/
+redir ix.seawall.horse/player ix.seawall.horse/survey/
