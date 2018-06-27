@@ -1,6 +1,9 @@
 ix.seawall.horse/t {
 	root ./testapp
 }
+ix.seawall.horse/s ix.seawall.horse/p ix.seawall.horse/player ix.seawall.horse/survey {
+	root ./playerapp
+}
 ix.seawall.horse/display {
 	root ./display
 }
