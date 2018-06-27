@@ -114,14 +114,14 @@ span.answer {
   border: none;
   margin: 5px;
   background-color: #ffffff;
-  padding: 5px;
+  padding: 15px;
   display: inline-block;
   text-align: bottom;
-  font-size: 20px;
+  font-size: 40px;
   font-weight: bold;
   font-family: 'Josefin Sans', sans-serif;
   background-color: #EFC94C;
-  border-radius: 15px;
+  border-radius: 5px;
 }
 
 span.voted i {
