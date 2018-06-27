@@ -53,6 +53,7 @@ console.log('QUESTION');
 
     if (gameStateObject.state !== GameStates.IDLE) {
         res.json(gameStateObject);
+        console.log('--not idle, sendnig ' + JSON.stringify(gameStateObject));
         return;
     }
 
@@ -75,7 +76,7 @@ console.log('QUESTION');
     gameStateObject.timerStarted = Date.now();
 
     updateAllClients(gameStateObject);
-
+console.log('--was idle, sendnig ' + JSON.stringify(gameStateObject));
     res.json(gameStateObject);
 
     setTimeout(function(){
