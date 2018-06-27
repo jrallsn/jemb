@@ -2,6 +2,8 @@ ix.seawall.horse/t {
 	root ./testapp
 }
 api.seawall.horse {
+	cors
+
 	proxy / localhost:4000 {
 		transparent
 	}

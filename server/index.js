@@ -29,6 +29,7 @@ var lastQuestion = -1;
 var lastButOneQuestion = -1;
 
 console.log(JSON.stringify(questions));
+console.log(questions.length);
 
 var submissions = {};
 
@@ -36,7 +37,7 @@ const defaultGameState = {
     state: GameStates.IDLE,
     remainingTime: 0,
     prompt: '',
-    currentQuestionNumber: 0,
+    currentQuestionNumber: -1,
     timerStarted: 0
 };
 
@@ -175,7 +176,7 @@ function updateAllClients (updateObject) {
 }
 
 function submit (responseText) {
-    if (gameStateObject.currentQuestionNumber === 0) {
+    if (gameStateObject.currentQuestionNumber === -1) {
         return;
     }
     if (gameStateObject.state !== GameStates.COLLECTING_SUBMISSIONS) {
