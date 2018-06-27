@@ -1,209 +1,99 @@
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-
-  <style>
-  html, body {
-    background-color: #45B29D;
-    color: white;
-    text-align: center;
-    height:100%; margin:0;padding:0
-  }
-  .status {
-    font-family: sans-serif;
-    font-size: 160%
-  }
-  .input-centered {
-    width: 100%;
-  }
-  .centered {
-    padding-top: 50px;
-    padding-bottom: 30px;
-    align: center;
-  }
-  .col-centered {
-    text-align: center;
-    align: center;
-    display: inline-block;
-    float: none
-  }
-
-  .container-fluid{
-    height:100%;
-    display:table;
-    width: 100%;
-    padding: 0
-  }
-
-  .row-fluid {height: 100%; display:table-cell; vertical-align: middle;}
-
-  .box {
-      display: block;
-      height: auto;
-      padding: 20px;
-       -webkit-transition: all 1000ms linear;
-      -moz-transition: all 1000ms linear;
-      -ms-transition: all 1000ms linear;
-      -o-transition: all 1000ms linear;
-      transition: all 1000ms linear;
-  }
-
-  .box img {
-      display: inline-block;
-      
-  }
-
-  .box.hidden {
-      -moz-opacity: 0;
-      opacity: 0;
-      -moz-transform: scale(0.01);
-      -webkit-transform: scale(0.01);
-      -o-transform: scale(0.01);
-      -ms-transform: scale(0.01);
-      transform: scale(0.01);
-  }
-
-
-  </style>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.css">
+  <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="player.css">
 
 </head>
 <body>
-  <script type="text/javascript">
+<div class="container" id="main">
+  <div id="start">
+    <div class="ui centered grid">
+      <div class="massive ui teal button"
+          onClick="joinGame()">Join Game
+      </div>
+    </div>
+  </div>
+
+  <div id="survey">
+    <div class="ui centered grid">
+      <div class="sixteen wide column">
+        <div id="question"></div>
+      </div>
+
+      <div class="sixteen wide column">
+        <div id="answerForm">
+          <form class="ui form">
+            <div class="ui error message"></div>
+            <div class="field">
+              <input placeholder="Enter" name="answer" id="answer" type="text">
+            </div>
+            <div class="massive ui left floated orange button"
+                id="clearBtn"
+                onClick="document.getElementById('answer').value = ''">Clear</div>
+            <div class="massive ui right floated teal button"
+                id="submitBtn"
+                onClick="sendMessage()">Submit</div>
+          </form>
+        </div>
+      </div>
+
+      <div class="four wide column"></div>
+      <div class="eight wide column">
+          <div id="countdown"></div>
+      </div>
+      <div class="four wide column"></div>
+
+      <div class="sixteen wide column">
+          <div id="remainingTime"></div>
+      </div>
+
+    </div> <!-- grid -->
+  </div> <!-- survey -->
+
+  <div id="thanks">
+      <div class="ui centered grid">
+          <div class="sixteen wide column">
+              <p>Thanks for answering.</p>
+          </div>
+      </div>
+  </div>
+
+  <div id="state">
+      <div id="stateText"></div>
+      <div>&nbsp;</div>
+      <div id="spinner" class="ui active centered inline loader"></div>
+  </div>
     
-    var exampleSocket = new WebSocket("wss://api.seawall.horse/");
-    var activeRoomId;
-    var reVote = /start.*Voting/;
-    var reVoteEnd = /.*oting.*Ended/;
-    var reDiscuss = /discuss.*/;
-    var reSub = /startSubmitting.*/;
-
-    exampleSocket.onopen = function(event) {
-      console.log('opened socket');
-    };
-    function joinRoom() {
-      var roomIdBox = document.getElementById('roomid');
-      var userNameBox = document.getElementById('username');
-      var roomId = roomIdBox.value.toUpperCase();
-      var userName = userNameBox.value;
-      activeRoomId = roomId;
-      activeUserName = userName;
-      exampleSocket.send(JSON.stringify({
-        action: 'join',
-        roomId: roomId,
-        userName: userName
-      }));
-      $("#join").hide();
-    }
-    function sendMessage() {
-      var messageBox = document.getElementById('messagebox');
-      var textToSend = messageBox.value;
-      exampleSocket.send(JSON.stringify({
-        action: 'submitFeedback',
-        feedback: textToSend,
-        roomId: activeRoomId,
-        userName: activeUserName
-      }));
-      $("#messagebox").val("");
-    }
-    function sendVote(vote) {
-      exampleSocket.send(JSON.stringify({
-        action: 'submitVote',
-        roomId: activeRoomId,
-        userName: activeUserName,
-        vote: vote
-      }));
-
-      if (vote === 1) {
-        $('#sad').addClass('hidden')
-      } else if (vote === 0) {
-        $('#happy').addClass('hidden')
-      }
-      $("#faces").hide(0).delay(500);
-    }
-
-    exampleSocket.onmessage = function(event){
-      console.log(event.data);
-      var data = JSON.parse(event.data);
-      var html = '';
-      if (data.info === 'userJoined') {
-        html = '<h1>' + data.roomId + '</h1>' +
-          '<p class="status">Welcome!</p>';
-        document.getElementById('response-div').innerHTML = html;
-      } else if (reVote.test(data.info)) {
-        // voting starts
-        document.getElementById('response-div').innerHTML = "";
-        document.getElementById('response-div').innerHTML = data.itemInfo;
-        $('#sad').removeClass('hidden')
-        $('#happy').removeClass('hidden')
-        $("#send").hide();
-        $("#faces").show();
-      } else if (reVoteEnd.test(data.info)) {
-        document.getElementById('response-div').innerHTML = "Voting has ended."
-        $("#faces").hide();
-      } else if (reDiscuss.test(data.info)) {
-        document.getElementById('response-div').innerHTML = "No more submissions."
-        $("#send").hide();
-      } else if (reSub.test(data.info)) {
-        document.getElementById('response-div').innerHTML = "";
-        // send happies/sads
-        $("#faces").hide();
-        $("#send").show();
-      }
-    };
-  </script>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
-    </div>
-    <div class="col-6">
-        <form class="form-inline">
-
-          <!-- join -->
-          <div id="join" class="centered">
-          <label class="sr-only" for="username">Room</label>
-          <input type="text" class="form-control input-centered" id="roomid" placeholder="Room code" style="text-transform: uppercase">
-          <label class="sr-only" for="roomid">UserName</label>
-          <input type="text" class="form-control input-centered" id="username" placeholder="Username">
-
-          <button type="button" class="btn btn-info"
-              onclick="joinRoom()">Join</button>
-          </div> <!-- join -->
-
-          <!-- send -->
-          <div id="send" class="centered" style="display:none">
-          <label class="sr-only" for="messagebox">Room</label>
-          <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="messagebox">
-          <button type="button" class="btn btn-info"
-              onclick="sendMessage()">Send</button>
-          </div> <!-- send -->
-        </form>
-
-        <!-- response -->
-        <div id="response-div"></div>
-    </div>
-    <div class="col">
-    </div>
-
-    <div id="faces" style="display:none">
-    <div class="row">
-      <div class="col">
-      </div>
-      <div class="col-6">
-        <img id="happy" class="centered box" src="happy.png" onclick="sendVote(1)">
-        <img id="sad" class="centered box" src="sad.png" onclick="sendVote(0)">
-      </div>
-      <div class="col">
-      </div>
-    </div><!-- row -->
-
-    </div> <!-- span -->
-    </div>
 </div>
-
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script type="text/javascript" src="player.js"></script>
+<script>
+    $( document ).ready(function() {
+      console.log( "ready!" );
+      $('.ui.form').form({
+        fields: {
+          answer: {
+            identifier: 'answer',
+            rules: [
+              {
+                type   : 'empty',
+                prompt : 'Please enter an answer.'
+              },
+              {
+                type   : 'maxLength[16]',
+                prompt : 'Must be {ruleValue} characters or less.'
+              }
+            ]
+          }
+        }
+      });
+    });
+</script>
+  
 </body>
 </html>
