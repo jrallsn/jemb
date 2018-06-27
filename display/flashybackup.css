@@ -1,7 +1,7 @@
 body {
   font-family: 'Ubuntu', sans-serif;
-  background-color: #48A74A;
-  border-top: #198A7A 50px solid;
+  background-color: #E27A3F;
+  border-top: #DF5A49 50px solid;
   padding: 0px;
   margin: 0px;
   text-align: center;
@@ -9,7 +9,7 @@ body {
 
 div#countdown {
   font-family: 'Pacifico', cursive;
-  color: #D0DC3F;
+  color: #EFC94C;
   font-size: 100px;
 }
 
@@ -113,13 +113,14 @@ div#waiting img {
 span.answer {
   border: none;
   margin: 5px;
+  background-color: #ffffff;
   padding: 15px;
   display: inline-block;
   text-align: bottom;
   font-size: 40px;
   font-weight: bold;
   font-family: 'Josefin Sans', sans-serif;
-  background-color: #D0DC3F;
+  background-color: #EFC94C;
   border-radius: 5px;
 }
 
@@ -135,7 +136,7 @@ span#remainingTime {
   border: none;
   display: inline-block;
   position: absolute;
-  background-color: #D0DC3F;
+  background-color: #EFC94C;
   left: 0px;
   top: 0px;
   height: 50px;

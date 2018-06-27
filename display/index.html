@@ -32,11 +32,11 @@
 			switch (gameState) {
 	            case 'IDLE':
 	                displayString = 'Waiting to begin...';
-	                document.getElementById('section-board').style.display = "none";
+	               // document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'COLLECTING_SUBMISSIONS':
 	                displayString = state.prompt;
-	                document.getElementById('section-board').style.display = "none";
+	                //document.getElementById('section-board').style.display = "none";
 	                break;
 	            case 'SHOWING_RESULT':
 	                //displayString = JSON.stringify(state.submissions);
@@ -68,7 +68,7 @@
 	            	} else {
 	            		displayString = 'Waiting for player...';
 	            	}
-	            	document.getElementById('section-board').style.display = "none";
+	            	//document.getElementById('section-board').style.display = "none";
 	                break;
 	        }
 
@@ -118,7 +118,7 @@
 		<span id='remainingTime'>
 		</span>
 		<div id='waiting'>
-			<img src="dancing.gif">
+		<!--	<img src="dancing.gif"> -->
 		</div>
 	</div>
 
@@ -128,11 +128,14 @@
 	</div>
 
 	<div id='section-secondary'>
-		<div id="display-div">gimme dat boat</div>
+		<div id="display-div"></div>
 	</div>
-
-	<div id='section-board' style="display: none;">
-		<span class="answer" id="answer-1">whatevers - a</div> 
+<br><br>
+	<div id='section-board' style="display: ;">
+		<span class="answer" id="answer-1">whatevers - a</span> 
+		<span class="answer" id="answer-2">whatevers - d</span> 
+		<span class="answer" id="answer-3">whatevers - c</span> 
+		<span class="answer" id="answer-4">whatevers - d</span> 
 	</div>	
 
 	<div id='countdown' style="display:none"></div>
