@@ -49,8 +49,11 @@ app.get('/hello', (req, res) => res.send('Hello World!'));
 app.get('/state', (req, res) => res.json(gameStateObject));
 
 app.get('/question', (req, res) => {
+console.log('QUESTION');
+
     if (gameStateObject.state !== GameStates.IDLE) {
         res.json(gameStateObject);
+        console.log('--not idle, sendnig ' + JSON.stringify(gameStateObject));
         return;
     }
 
@@ -73,7 +76,7 @@ app.get('/question', (req, res) => {
     gameStateObject.timerStarted = Date.now();
 
     updateAllClients(gameStateObject);
-
+console.log('--was idle, sendnig ' + JSON.stringify(gameStateObject));
     res.json(gameStateObject);
 
     setTimeout(function(){
@@ -346,4 +349,8 @@ wss.on('connection', function connection(ws) {
   	});
 
   	//ws.send('something');
+});
+
+wss.on('error', function(error){
+    console.log(error);
 });
