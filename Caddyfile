@@ -1,6 +1,9 @@
 ix.seawall.horse/t {
 	root ./testapp
 }
+ix.seawall.horse/display {
+	root ./display
+}
 api.seawall.horse {
 	cors
 

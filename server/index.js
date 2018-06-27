@@ -124,24 +124,6 @@ app.post('/showresults', (req, res) => {
 
     result = deepClone(gameStateObject);
 
- /*   var allSubmissions = [];
-    for (var answer in submissions[gameStateObject.currentQuestionNumber]) {
-        if (!submissions[gameStateObject.currentQuestionNumber].hasOwnProperty(answer)) {
-            continue;
-        }
-
-        var count = submissions[gameStateObject.currentQuestionNumber][answer];
-
-        allSubmissions.push({
-            answer: answer,
-            count: count
-        });
-    }
-
-    allSubmissions.sort(function(a, b) {
-        return a.count - b.count;
-    });
-*/
     result.submissions = getSortedSubmissions(gameStateObject.currentQuestionNumber);//allSubmissions;
 
     updateMasterDisplays(result);
