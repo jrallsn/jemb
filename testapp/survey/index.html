@@ -34,10 +34,10 @@
 
 			var state = event.data;
 
-			if (state.currentGameState === 'COLLECTING_SUBMISSIONS') {
-				document.getElementById('response-div').innerHTML = state.prompt;
+			if (state.state === 'COLLECTING_SUBMISSIONS') {
+				document.getElementById('prompt-div').innerHTML = state.prompt;
 			} else {
-				document.getElementById('response-div').innerHTML = 'WAITING';
+				document.getElementById('prompt-div').innerHTML = 'WAITING';
 			}
 
 			document.getElementById('response-div').innerHTML = event.data;
