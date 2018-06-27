@@ -26,7 +26,15 @@ const app = dialogflow({debug: true});
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
 app.intent('Default Welcome Intent', (conv) => {
+<<<<<<< HEAD
     const ssml = '<speak><audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>Welcome to I X Feud!</speak>';
+=======
+    const ssml = `
+        <speak>
+            <audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>
+            Welcome to I X Feud!
+        </speak>`;
+>>>>>>> 1e6ebb71ec61561a909166a22fbca3111de02af9
     conv.ask(ssml);
     conv.ask("You ready dawg?");
 });
