@@ -61,6 +61,19 @@
 				answer: ans
 			}));
 		}
+
+		function sendReset() {
+			var req = new XMLHttpRequest();
+			req.open('POST', 'https://api.seawall.horse/reset', true);
+
+			req.onreadystatechange = function() {
+			    if (req.readyState === 4 && req.status === 200) {
+			    	document.getElementById('response-div').innerHTML = req.responseText;
+			    }
+			};
+
+			req.send(JSON.stringify({}));
+		}
 	</script>
 	<br>
 	<br>
@@ -70,7 +83,9 @@
 	<button onclick="question()">Ask for a question</button>
 	<br>
 	<input type="text" id="answerbox">
-	<button onclick="sendAnswer()">Try an answer</button>
+	<button onclick="sendAnswer()">Try an answer</button><br>
+	<button onclick="sendReset()">Reset</button>
+	<br>
 	<div id="response-div"></div>
 
 </body>
