@@ -61,6 +61,8 @@ app.get('/question', (req, res) => {
         questionNum = Math.floor(Math.random() * questions.length);
     } while (questionNum === lastQuestion || questionNum === lastButOneQuestion);
 
+    submissions[questionNum] = submissions[questionNum] || {};
+
     lastButOneQuestion = lastQuestion;
     lastQuestion = questionNum;
 
