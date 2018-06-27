@@ -57,9 +57,9 @@ app.get('/question', (req, res) => {
     var questionNum = -1;
 
     // Don't use either of the last two questions
-    while (questionNum === lastQuestion || questionNum === lastButOneQuestion) {
+    do {
         questionNum = Math.floor(Math.random() * questions.length);
-    }
+    } while (questionNum === lastQuestion || questionNum === lastButOneQuestion);
 
     lastButOneQuestion = lastQuestion;
     lastQuestion = questionNum;
