@@ -42,10 +42,12 @@
             <div class="field">
               <input placeholder="Your answer..." name="answer" id="answer" type="text">
             </div>
-            <div class="massive ui left floated orange reset button"
-                 id="clearBtn"
-                 onClick="document.getElementById('answer').value = ''">Clear</div>
-            <div class="massive ui right floated teal submit button">Submit</div>
+            <div class="massive ui left floated orange button"
+                id="clearBtn"
+                onClick="document.getElementById('answer').value = ''">Clear</div>
+            <div class="massive ui right floated teal button"
+                id="submitBtn"
+                onClick="sendMessage()">Submit</div>
             <div class="ui error message"></div>
           </form>
         </div>
