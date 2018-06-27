@@ -191,9 +191,9 @@ function submit (responseText) {
     answer = responseText.toLowerCase();
     answer = answer.replace(/\s/g, '');
     
-    submissions[currentQuestionNumber] = submissions[currentQuestionNumber] || {};
-    submissions[currentQuestionNumber][answer] = submissions[currentQuestionNumber][answer] || 0;
-    submissions[currentQuestionNumber][answer]++;
+    submissions[qNum] = submissions[qNum] || {};
+    submissions[qNum][answer] = submissions[qNum][answer] || 0;
+    submissions[qNum][answer]++;
 }
 
 function getTotalSubmissionsForQuestion (questionNum) {
