@@ -41,19 +41,6 @@ ws.onmessage = function(event){
   startTimer(10);
 };
 
-$('form').form({
-  on: 'blur',
-  fields: {
-      name: {
-          identifier: 'answer',
-          rules: [{
-              type: 'empty',
-              prompt: 'Please enter a value'
-          }]
-      }
-  }
-});
-
 function startTimer(numSeconds) {
   totalTime = numSeconds;
   if (timerIntervalId) {
@@ -61,13 +48,13 @@ function startTimer(numSeconds) {
   }
   var timerDiv = document.getElementById('countdown');
   var seconds = Number(numSeconds);
-  timerDiv.innerHTML = 'Time left: ' + seconds;
+  timerDiv.innerHTML = seconds;
   timerDiv.style.display = "";
   timerIntervalId = setInterval(function() {
           seconds--;
           remainingTime = seconds;
           document.getElementById('remainingTime').style.width = remainingTime / totalTime * 100 + "%";
-          timerDiv.innerHTML = 'Time left: ' + seconds;
+          timerDiv.innerHTML = seconds;
           if(seconds === 0){
               clearInterval(timerIntervalId);
           }
@@ -81,9 +68,17 @@ function hideTimer() {
 }
 
 function sendMessage() {
+  
+  if( ! $('.ui.form').form('is valid', 'answer')) {
+    console.log('invalid!!!');
+    $('.ui.form').form('valiate field', 'answer');
+    return;
+  }
+  
   $("#poll").hide();
   $("#thanks").show();
   console.log('sendMessage!!!!');
+  
 }
 
 function another() {
