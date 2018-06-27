@@ -1,12 +1,12 @@
-api.seawall.horse/t {
-	root ./test
+ix.seawall.horse/t {
+	root ./testapp
 }
-api.seawall.horse/api {
-	proxy /api localhost:4000 {
+api.seawall.horse {
+	proxy / localhost:4000 {
 		transparent
 	}
 }
-api.seawall.horse {
+blar.seawall.horse {
    proxy / localhost:3000 {
       websocket
    }
