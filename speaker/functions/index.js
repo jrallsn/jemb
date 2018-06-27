@@ -28,9 +28,13 @@ const app = dialogflow({debug: true});
 app.intent('Default Welcome Intent', (conv) => {
     const ssml = `
         <speak>
-            <audio src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">Start</audio>
+  <par>
+    <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
+            <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="8.0s">Intro</audio>
             Welcome to I X Feud!
-        </speak>`;
+    </media>
+  </par>
+</speak>`;
     conv.ask(ssml);
     conv.ask("You ready dawg?");
 });
@@ -40,8 +44,6 @@ app.intent('status_yes', (conv) => {
     conv.ask("Alright let's go!");
     // Ask Player 1 name
     conv.ask("Player 1, what's your name?");
-
-
     // Game show music
     // Question One Intro
     // Generate Random question from list
@@ -66,7 +68,30 @@ app.intent('player2_name', (conv, {name}) => {
     conv.user.storage.player2 = name;
     var confirmName = "Alright " + conv.user.storage.player2 + ". Get ready!";
     conv.ask(confirmName);
+
+    // Game show music
+    const ssml = `<speak>
+  <par>
+    <media xml:id="intro" soundLevel="5dB" fadeOutDur="2.0s">
+      <audio src="https://upload.wikimedia.org/wikipedia/commons/1/14/Happy_Happy_Game_Show_%28ISRC_USUAN1600006%29.mp3" clipEnd="5.0s">
+        <desc>Game intro</desc>
+      </audio>
+Welcome to another game of I X Feud! Here's a rundown of how this will go: Audience, you will have 20 seconds to input your one word answer to the question on your phones. Then each player will get the chance to 
+      guess what the most popular answer was. Points will be calculated based on how many audience members chose the same answer. After 3 rounds, the person with the most points will receive...
+    </media>
+    <media xml:id="drums" begin="intro.end" soundLevel="5dB" fadeOutDur="1.0s">
+      <audio src="https://actions.google.com/sounds/v1/cartoon/drum_roll.ogg" clipBegin="18.0s" clipEnd="20.0s"></audio>
+    </media>
+    <media xml:id="pride" begin="drums.end" soundLevel="5dB">
+        <speak>Nothing! The Earth still spins</speak>
+    </media>
+  </par>
+</speak>`;
+conv.ask(ssml);
 });
+
+
+
 
 // Set the DialogflowApp object to handle the HTTPS POST request.
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
